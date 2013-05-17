@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-Name: tk3.labyrinth.umundo
+Bundle-SymbolicName: tk3.labyrinth.umundo
+Bundle-Version: 0.1
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: tk3.labyrinth.core;bundle-version="0.1.0"
