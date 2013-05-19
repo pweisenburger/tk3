@@ -3,7 +3,6 @@ package tk3.labyrinth.core.shared;
 import tk3.labyrinth.core.gamefield.Room;
 
 public class Position {
-	
 	private Room room;
 	private int x;
 	private int y;
@@ -25,5 +24,4 @@ public class Position {
 	public Room getRoom() {
 		return room;
 	}
-
 }
