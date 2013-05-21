@@ -6,7 +6,7 @@ public abstract class GameElement {
 	private Position position;
 	
 	public void initPosition(Position position) {
-		if (this.position != null)
+		if (this.position != null && this.position != position)
 			throw new UnsupportedOperationException("Position already set");
 		this.position = position;
 	}

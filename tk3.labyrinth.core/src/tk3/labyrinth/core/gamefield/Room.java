@@ -23,7 +23,8 @@ public class Room {
 	}
 	
 	public GameElement getGameElement(int x, int y) {
-		if (y < gameElements.length && x < gameElements[y].length)
+		if (y >= 0 && y < gameElements.length &&
+				x >= 0 && x < gameElements[y].length)
 			return gameElements[y][x];
 		return null;
 	}

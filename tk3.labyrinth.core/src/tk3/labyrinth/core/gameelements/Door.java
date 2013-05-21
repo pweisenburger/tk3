@@ -5,7 +5,7 @@ public class Door extends GameElement implements IActivatable {
 	private boolean active;
 	
 	public void initDoor(Door door) {
-		if (this.door != null)
+		if (this.door != null && this.door != door)
 			throw new UnsupportedOperationException("Door already set");
 		this.door = door;
 	}
@@ -28,5 +28,9 @@ public class Door extends GameElement implements IActivatable {
 	@Override
 	public boolean isActive() {
 		return active;
+	}
+	
+	public Door getDoor() {
+		return door;
 	}
 }
