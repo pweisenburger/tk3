@@ -1,10 +1,10 @@
 grammar MapGrammar;
 
 @parser::header {
-    package tk3.labyrinth.map.generator.grammar;
+    package tk3.labyrinth.map.grammar;
 }
 @lexer::header {
-    package tk3.labyrinth.map.generator.grammar;
+    package tk3.labyrinth.map.grammar;
 }
 
 field : FIELD name door* button* room+ ;
@@ -13,10 +13,11 @@ door : DOOR id door_goal ;
 door_goal : GOAL'='id ;
 button : BUTTON id activate ;
 activate : ACTIVATE'='id ;
-room : ROOM id type contain_doors contain_buttons; 
+room : ROOM id room_attr contain_doors contain_buttons ; 
 contain_doors : DOOR'='id (','id)* | '' ;
 contain_buttons : BUTTON'='id(','id)* | '' ;
-type : TYPE'='(START|FINISH) | max_player | '' ;
+room_attr : type | max_player | '' ;
+type : TYPE'=START|FINISH ;
 max_player : MAXIMUM'='N ;
 id : ID'='STRING ;
 

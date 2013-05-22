@@ -3,4 +3,6 @@ Bundle-Name: tk3.labyrinth.core
 Bundle-SymbolicName: tk3.labyrinth.core
 Bundle-Version: 0.1
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Provide-Package: tk3.labyrinth.core.shared
+Provide-Package: tk3.labyrinth.core.gameelements,
+ tk3.labyrinth.core.gamefield,
+ tk3.labyrinth.core.shared

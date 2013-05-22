@@ -8,9 +8,11 @@ public class Room {
 	
 	private GameElement[][] gameElements;
 	
+	public Room(String id) {
+		this.id = id;
+	}
+	
 	public String getId() {
 		return id;
 	}
-	
-
 }
