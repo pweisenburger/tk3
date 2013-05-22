@@ -125,9 +125,11 @@ public class GameField extends JComponent implements Observer {
 	
 	@Override
 	protected void paintComponent(Graphics g) {
+		// clear game field
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
+		// calculate game field offset
 		Position playerPos = ownPlayer.getPosition();
 		Point playerOffset = roomPosition.get(playerPos.getRoom());
 		Point pos = new Point(
@@ -135,6 +137,7 @@ public class GameField extends JComponent implements Observer {
 				elementSize / 2 + elementSize * (playerPos.getY() + playerOffset.y));
 		Point offset = new Point(getWidth() / 2 - pos.x, getHeight() / 2 - pos.y);
 		
+		// draw rooms
 		for (Room room : game.getField().getRooms()) {
 			Point roomPos = roomPosition.get(room);
 			
@@ -143,17 +146,12 @@ public class GameField extends JComponent implements Observer {
 					Point point = new Point((roomPos.x + x) * elementSize + offset.x,
 						                    (roomPos.y + y) * elementSize + offset.y);
 					GameElement ge = room.getGameElement(x, y);
-					
 					if (ge != null)
 						drawGameElement(g, ge, point);
-					
-					/*if (playerPos.getRoom() == room
-							&& playerPos.getX() == x
-							&& playerPos.getY() == y)
-						drawPlayer(g, player, point);*/
 				}
 		}
 		
+		// draw players
 		for (Player player : game.getPlayers()) {
 			Point roomPos = roomPosition.get(player.getPosition().getRoom());
 			Point point = new Point((roomPos.x + player.getPosition().getX()) * elementSize + offset.x,
