@@ -10,6 +10,7 @@ import tk3.labyrinth.core.player.Player;
 public class Game {
 	private Field field;
 	private List<Player> players;
+	private Player ownPlayer;
 	private List<Observer> observers;
 	private String id;
 	
@@ -54,7 +55,22 @@ public class Game {
 	}
 	
 	public List<Player> getPlayers() {
-		return players;
+		return Collections.unmodifiableList(players);
+	}
+	
+	public Player getPlayer(String id) {
+		for (Player player : players)
+			if (player.getId().equals(id))
+				return player;
+		return null;
+	}
+	
+	public Player getOwnPlayer() {
+		return ownPlayer;
+	}
+	
+	public void setOwnPlayer(Player ownPlayer) {
+		this.ownPlayer = ownPlayer;
 	}
 	
 	public String getId() {
