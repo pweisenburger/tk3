@@ -16,7 +16,7 @@ activate : ACTIVATE'='id ;
 room : ROOM id type contain_doors contain_buttons; 
 contain_doors : DOOR'='id (','id)* | '' ;
 contain_buttons : BUTTON'='id(','id)* | '' ;
-type : ( TYPE'='(START|FINISH) | max_player | '') ;
+type : TYPE'='(START|FINISH) | max_player | '' ;
 max_player : MAXIMUM'='N ;
 id : ID'='STRING ;
 
