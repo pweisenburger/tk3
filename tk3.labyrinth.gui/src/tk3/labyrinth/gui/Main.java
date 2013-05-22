@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import tk3.labyrinth.Game;
+import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
 import tk3.labyrinth.core.gameelements.GameElement;
 import tk3.labyrinth.core.gameelements.Wall;
@@ -14,13 +15,14 @@ import tk3.labyrinth.core.shared.Position;
 
 public class Main {
 	public static void main(String[] args) {
+		Button button0;
 		Door door0, door1, door2, door3;
 		
 		GameElement elements0[][] = {
 			{ new Wall(), door0 = new Door(), new Wall(), new Wall() },
 			{ door2 = new Door(), null, null, new Wall() },
 			{ new Wall(), null, null, new Wall() },
-			{ new Wall(), null, null, new Wall() },
+			{ new Wall(), null, button0 = new Button(), new Wall() },
 			{ new Wall(), new Wall(), new Wall(), new Wall() }
 		};
 		
@@ -45,7 +47,9 @@ public class Main {
 		door2.initDoor(door3);
 		door3.initDoor(door2);
 		
-		door0.activate(null);
+		button0.initReferencedElement(door0);
+		
+		//door0.activate(null);
 		door1.activate(null);
 		door2.activate(null);
 		door3.activate(null);

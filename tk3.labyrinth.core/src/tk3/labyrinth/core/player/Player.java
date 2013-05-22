@@ -26,9 +26,10 @@ public class Player {
 		if (ge != null && !ge.isTraversable())
 			return false;
 		
+		Position oldPosition = this.position;
 		this.position = position;
 		for (Observer o : game.getObservers())
-			o.playerMoved(this);
+			o.playerMoved(this, oldPosition);
 		return true;
 	}
 	

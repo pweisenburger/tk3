@@ -10,8 +10,10 @@ import javax.swing.JComponent;
 
 import tk3.labyrinth.Game;
 import tk3.labyrinth.Observer;
+import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
 import tk3.labyrinth.core.gameelements.GameElement;
+import tk3.labyrinth.core.gameelements.Wall;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
@@ -33,14 +35,45 @@ public class GameField extends JComponent implements Observer {
 		game.addObserver(this);
 		
 		doorEntry = RoomUtil.calculateDoorEntries(game.getField());
-		
 		roomPosition = RoomUtil.calculateRoomPosition(game.getField(), doorEntry);
-		
 		player = game.getPlayers().get(0);
 	}
 	
 	@Override
-	public void playerMoved(Player player) {
+	public void playerMoved(Player player, Position oldPosition) {
+		//TODO this should be done in core
+		GameElement ge = getGameElement(oldPosition);
+		boolean activated = false;
+		if (ge instanceof Button) {
+			Button button = (Button) ge;
+			if (button.getReferencedElement() != null) {
+				for (Player p : game.getPlayers())
+					if (p.getPosition().equals(oldPosition))  {
+						button.getReferencedElement().activate(button);
+						activated = true;
+						break;
+					}
+				if (!activated)
+					button.getReferencedElement().deactivate(button);
+			}
+		}
+		
+		ge = getGameElement(player.getPosition());
+		activated = false;
+		if (ge instanceof Button) {
+			Button button = (Button) ge;
+			if (button.getReferencedElement() != null) {
+				for (Player p : game.getPlayers())
+					if (p.getPosition().equals(player.getPosition()))  {
+						button.getReferencedElement().activate(button);
+						activated = true;
+						break;
+					}
+				if (!activated)
+					button.getReferencedElement().deactivate(button);
+			}
+		}
+		
 		repaint();
 	}
 	
@@ -53,7 +86,7 @@ public class GameField extends JComponent implements Observer {
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
 			Position pos = player.getPosition();
-			GameElement ge = pos.getRoom().getGameElement(pos.getX(), pos.getY());
+			GameElement ge = getGameElement(pos);
 			
 			Position newPos = null;
 			switch (event.getKeyCode()) {
@@ -122,9 +155,35 @@ public class GameField extends JComponent implements Observer {
 		}
 	}
 	
+	protected GameElement getGameElement(Position position) {
+		return position.getRoom().getGameElement(position.getX(), position.getY());
+	}
+	
 	protected void drawGameElement(Graphics g, GameElement ge, Point p) {
-		g.setColor(ge instanceof Door ? Color.GRAY : Color.WHITE);
-		g.fillRect(p.x, p.y, elementSize, elementSize);
+		if (ge instanceof Wall) {
+			g.setColor(Color.WHITE);
+			g.fillRect(p.x, p.y, elementSize, elementSize);
+		}
+		
+		if (ge instanceof Button) {
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(p.x, p.y, elementSize, elementSize);
+		}
+		
+		if (ge instanceof Door) {
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(p.x, p.y, elementSize, elementSize);
+			
+			if (!((Door) ge).isActive()) {
+				g.setColor(Color.WHITE);
+				g.drawLine(p.x, p.y, p.x + elementSize, p.y + elementSize);
+				g.drawLine(p.x + elementSize, p.y, p.x, p.y + elementSize);
+				g.drawPolygon(
+						new int[] { p.x + elementSize / 2, p.x + elementSize, p.x + elementSize / 2, p.x},
+						new int[] { p.y, p.y + elementSize / 2, p.y + elementSize, p.y + elementSize / 2},
+						4);
+			}
+		}
 	}
 	
 	protected void drawPlayer(Graphics g, Player player, Point p) {
