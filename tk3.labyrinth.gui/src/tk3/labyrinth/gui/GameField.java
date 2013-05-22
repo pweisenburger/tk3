@@ -24,7 +24,7 @@ public class GameField extends JComponent implements Observer {
 	private Game game;
 	private Map<Room, Point> roomPosition;
 	private Map<Door, DoorEntry> doorEntry;
-	private Player player;
+	private Player ownPlayer;
 	
 	static final private int elementSize = 16;
 	
@@ -36,7 +36,7 @@ public class GameField extends JComponent implements Observer {
 		
 		doorEntry = RoomUtil.calculateDoorEntries(game.getField());
 		roomPosition = RoomUtil.calculateRoomPosition(game.getField(), doorEntry);
-		player = game.getPlayers().get(0);
+		ownPlayer = game.getOwnPlayer();
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class GameField extends JComponent implements Observer {
 	@Override
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
-			Position pos = player.getPosition();
+			Position pos = ownPlayer.getPosition();
 			GameElement ge = getGameElement(pos);
 			
 			Position newPos = null;
@@ -117,7 +117,7 @@ public class GameField extends JComponent implements Observer {
 							y < 0 || y >= newPos.getRoom().getHeight())
 						newPos = door.getDoor().getPosition();
 				}
-				player.move(newPos);
+				ownPlayer.move(newPos);
 			}
 		}
 		super.processKeyEvent(event);
@@ -128,7 +128,7 @@ public class GameField extends JComponent implements Observer {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
-		Position playerPos = player.getPosition();
+		Position playerPos = ownPlayer.getPosition();
 		Point playerOffset = roomPosition.get(playerPos.getRoom());
 		Point pos = new Point(
 				elementSize / 2 + elementSize * (playerPos.getX() + playerOffset.x),
@@ -147,12 +147,24 @@ public class GameField extends JComponent implements Observer {
 					if (ge != null)
 						drawGameElement(g, ge, point);
 					
-					if (playerPos.getRoom() == room
+					/*if (playerPos.getRoom() == room
 							&& playerPos.getX() == x
 							&& playerPos.getY() == y)
-						drawPlayer(g, player, point);
+						drawPlayer(g, player, point);*/
 				}
 		}
+		
+		for (Player player : game.getPlayers()) {
+			Point roomPos = roomPosition.get(player.getPosition().getRoom());
+			Point point = new Point((roomPos.x + player.getPosition().getX()) * elementSize + offset.x,
+				                    (roomPos.y + player.getPosition().getY()) * elementSize + offset.y);
+			drawPlayer(g, player, point);
+		}
+		
+		Point roomPos = roomPosition.get(ownPlayer.getPosition().getRoom());
+		Point point = new Point((roomPos.x + ownPlayer.getPosition().getX()) * elementSize + offset.x,
+			                    (roomPos.y + ownPlayer.getPosition().getY()) * elementSize + offset.y);
+		drawPlayer(g, ownPlayer, point);
 	}
 	
 	protected GameElement getGameElement(Position position) {
@@ -187,7 +199,13 @@ public class GameField extends JComponent implements Observer {
 	}
 	
 	protected void drawPlayer(Graphics g, Player player, Point p) {
-		g.setColor(Color.RED);
-		g.fillOval(p.x, p.y, elementSize, elementSize);
+		if (player == ownPlayer) {
+			g.setColor(Color.RED);
+			g.fillOval(p.x, p.y, elementSize, elementSize);
+		}
+		else {
+			g.setColor(Color.ORANGE);
+			g.fillOval(p.x + 1, p.y + 1, elementSize - 2, elementSize - 2);
+		}
 	}
 }
