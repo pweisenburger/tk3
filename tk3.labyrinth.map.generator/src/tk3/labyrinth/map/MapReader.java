@@ -45,9 +45,7 @@ public class MapReader implements MapGrammarListener {
 
 	private List<Door> currentDoors = new ArrayList<>();
 
-	private List<Button> currentButtons = new ArrayList<>();
-
-	private String roomType;
+	private List<Button> currentAddtional = new ArrayList<>();
 
 	public Field getResult() {
 		return field;
@@ -105,7 +103,7 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void enterMax_player(Max_playerContext ctx) {
-		roomType = "MAX " + ctx.N();
+		
 	}
 
 	@Override
@@ -140,9 +138,9 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void enterContain_buttons(Contain_buttonsContext ctx) {
-		currentButtons.clear();
+		currentAddtional.clear();
 		for (IdContext id : ctx.id()) {
-			currentButtons.add(idToButton.get(id));
+			currentAddtional.add(idToButton.get(id));
 		}
 	}
 
@@ -183,8 +181,7 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void enterType(TypeContext ctx) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -213,7 +210,7 @@ public class MapReader implements MapGrammarListener {
 		String id = ctx.id().getText();
 		GameElement[][] elementMatrix = createRoom();
 		placeDoors(elementMatrix, currentDoors);
-		placeElements(elementMatrix, currentButtons);
+		placeElements(elementMatrix, currentAddtional);
 		
 		 Room room = new Room(elementMatrix);
 		 room.setId(id);
@@ -232,7 +229,7 @@ public class MapReader implements MapGrammarListener {
 
 	private GameElement[][] createRoom() {
 		int x = 2 + currentDoors.size();
-		int y = 2 + currentButtons.size();
+		int y = 2 + currentAddtional.size();
 
 		GameElement[][] elementMatrix = new GameElement[x][y];
 		for (int i = 0; i < x; i++) {
