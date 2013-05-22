@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bundle-Name: GUI
+Bundle-Name: tk3.labyrinth.gui
 Bundle-SymbolicName: tk3.labyrinth.gui
 Bundle-Version: 0.1
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

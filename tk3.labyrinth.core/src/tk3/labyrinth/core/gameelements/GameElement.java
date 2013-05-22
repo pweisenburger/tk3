@@ -3,9 +3,14 @@ package tk3.labyrinth.core.gameelements;
 import tk3.labyrinth.core.shared.Position;
 
 public abstract class GameElement {
-
 	private Position position;
 
+	public void initPosition(Position position) {
+		if (this.position != null && this.position != position)
+			throw new UnsupportedOperationException("Position already set");
+		this.position = position;
+	}
+	
 	/**
 	 * Ist das Feld betretbar?
 	 * 
@@ -21,9 +26,4 @@ public abstract class GameElement {
 	public Position getPosition() {
 		return position;
 	}
-
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-
 }

@@ -1,38 +1,36 @@
 package tk3.labyrinth.core.gameelements;
 
 public class Door extends GameElement implements IActivatable {
-
 	private Door door;
-
-	@Override
-	public void activate(GameElement ge) {
-		// TODO Auto-generated method stub
-
+	private boolean active;
+	
+	public void initDoor(Door door) {
+		if (this.door != null && this.door != door)
+			throw new UnsupportedOperationException("Door already set");
+		this.door = door;
 	}
-
-	@Override
-	public void deactivate(GameElement ge) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean isActive() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	@Override
 	public boolean isTraversable() {
-		// TODO Auto-generated method stub
-		return false;
+		return isActive();
 	}
-
-	public Door getGoal() {
+	
+	@Override
+	public void activate(GameElement ge) {
+		active = true;
+	}
+	
+	@Override
+	public void deactivate(GameElement ge) {
+		active = false;
+	}
+	
+	@Override
+	public boolean isActive() {
+		return active;
+	}
+	
+	public Door getDoor() {
 		return door;
-	}
-
-	public void setGoal(Door door) {
-		this.door = door;
 	}
 }
