@@ -36,7 +36,7 @@ public class Room {
 	public int getHeight() {
 		return height;
 	}
-
+	
 	public String getId() {
 		return id;
 	}
