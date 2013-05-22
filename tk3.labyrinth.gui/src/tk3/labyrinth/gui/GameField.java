@@ -9,10 +9,11 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 import tk3.labyrinth.Game;
-import tk3.labyrinth.Observer;
+import tk3.labyrinth.GameObserver;
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
 import tk3.labyrinth.core.gameelements.GameElement;
+import tk3.labyrinth.core.gameelements.IActivatable;
 import tk3.labyrinth.core.gameelements.Wall;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.core.player.Player;
@@ -20,11 +21,11 @@ import tk3.labyrinth.core.shared.Position;
 import tk3.labyrinth.gui.RoomUtil.DoorEntry;
 
 @SuppressWarnings("serial")
-public class GameField extends JComponent implements Observer {
+public class GameField extends JComponent implements GameObserver {
 	private Game game;
 	private Map<Room, Point> roomPosition;
 	private Map<Door, DoorEntry> doorEntry;
-	private Player player;
+	private Player ownPlayer;
 	
 	static final private int elementSize = 16;
 	
@@ -36,56 +37,23 @@ public class GameField extends JComponent implements Observer {
 		
 		doorEntry = RoomUtil.calculateDoorEntries(game.getField());
 		roomPosition = RoomUtil.calculateRoomPosition(game.getField(), doorEntry);
-		player = game.getPlayers().get(0);
+		ownPlayer = game.getOwnPlayer();
 	}
 	
 	@Override
 	public void playerMoved(Player player, Position oldPosition) {
-		//TODO this should be done in core
-		GameElement ge = getGameElement(oldPosition);
-		boolean activated = false;
-		if (ge instanceof Button) {
-			Button button = (Button) ge;
-			if (button.getReferencedElement() != null) {
-				for (Player p : game.getPlayers())
-					if (p.getPosition().equals(oldPosition))  {
-						button.getReferencedElement().activate(button);
-						activated = true;
-						break;
-					}
-				if (!activated)
-					button.getReferencedElement().deactivate(button);
-			}
-		}
-		
-		ge = getGameElement(player.getPosition());
-		activated = false;
-		if (ge instanceof Button) {
-			Button button = (Button) ge;
-			if (button.getReferencedElement() != null) {
-				for (Player p : game.getPlayers())
-					if (p.getPosition().equals(player.getPosition()))  {
-						button.getReferencedElement().activate(button);
-						activated = true;
-						break;
-					}
-				if (!activated)
-					button.getReferencedElement().deactivate(button);
-			}
-		}
-		
 		repaint();
 	}
 	
 	@Override
-	public void elementActivated(GameElement ge) {
+	public void elementActivated(IActivatable ge) {
 		//
 	}
 	
 	@Override
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
-			Position pos = player.getPosition();
+			Position pos = ownPlayer.getPosition();
 			GameElement ge = getGameElement(pos);
 			
 			Position newPos = null;
@@ -117,7 +85,7 @@ public class GameField extends JComponent implements Observer {
 							y < 0 || y >= newPos.getRoom().getHeight())
 						newPos = door.getDoor().getPosition();
 				}
-				player.move(newPos);
+				ownPlayer.move(newPos);
 			}
 		}
 		super.processKeyEvent(event);
@@ -125,16 +93,19 @@ public class GameField extends JComponent implements Observer {
 	
 	@Override
 	protected void paintComponent(Graphics g) {
+		// clear game field
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
-		Position playerPos = player.getPosition();
+		// calculate game field offset
+		Position playerPos = ownPlayer.getPosition();
 		Point playerOffset = roomPosition.get(playerPos.getRoom());
 		Point pos = new Point(
 				elementSize / 2 + elementSize * (playerPos.getX() + playerOffset.x),
 				elementSize / 2 + elementSize * (playerPos.getY() + playerOffset.y));
 		Point offset = new Point(getWidth() / 2 - pos.x, getHeight() / 2 - pos.y);
 		
+		// draw rooms
 		for (Room room : game.getField().getRooms()) {
 			Point roomPos = roomPosition.get(room);
 			
@@ -143,16 +114,23 @@ public class GameField extends JComponent implements Observer {
 					Point point = new Point((roomPos.x + x) * elementSize + offset.x,
 						                    (roomPos.y + y) * elementSize + offset.y);
 					GameElement ge = room.getGameElement(x, y);
-					
 					if (ge != null)
 						drawGameElement(g, ge, point);
-					
-					if (playerPos.getRoom() == room
-							&& playerPos.getX() == x
-							&& playerPos.getY() == y)
-						drawPlayer(g, player, point);
 				}
 		}
+		
+		// draw players
+		for (Player player : game.getPlayers()) {
+			Point roomPos = roomPosition.get(player.getPosition().getRoom());
+			Point point = new Point((roomPos.x + player.getPosition().getX()) * elementSize + offset.x,
+				                    (roomPos.y + player.getPosition().getY()) * elementSize + offset.y);
+			drawPlayer(g, player, point);
+		}
+		
+		Point roomPos = roomPosition.get(ownPlayer.getPosition().getRoom());
+		Point point = new Point((roomPos.x + ownPlayer.getPosition().getX()) * elementSize + offset.x,
+			                    (roomPos.y + ownPlayer.getPosition().getY()) * elementSize + offset.y);
+		drawPlayer(g, ownPlayer, point);
 	}
 	
 	protected GameElement getGameElement(Position position) {
@@ -187,7 +165,13 @@ public class GameField extends JComponent implements Observer {
 	}
 	
 	protected void drawPlayer(Graphics g, Player player, Point p) {
-		g.setColor(Color.RED);
-		g.fillOval(p.x, p.y, elementSize, elementSize);
+		if (player == ownPlayer) {
+			g.setColor(Color.RED);
+			g.fillOval(p.x, p.y, elementSize, elementSize);
+		}
+		else {
+			g.setColor(Color.ORANGE);
+			g.fillOval(p.x + 1, p.y + 1, elementSize - 2, elementSize - 2);
+		}
 	}
 }
