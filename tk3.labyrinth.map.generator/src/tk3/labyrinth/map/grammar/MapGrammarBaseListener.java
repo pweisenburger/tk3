@@ -1,12 +1,11 @@
 // Generated from src/tk3/labyrinth/map/generator/grammar/MapGrammar.g4 by ANTLR 4.0
 
-    package tk3.labyrinth.map.generator.grammar;
+    package tk3.labyrinth.map.grammar;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class MapGrammarBaseListener implements MapGrammarListener {
 	@Override public void enterId(MapGrammarParser.IdContext ctx) { }

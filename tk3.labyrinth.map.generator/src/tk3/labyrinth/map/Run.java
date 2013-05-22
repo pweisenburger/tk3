@@ -1,4 +1,4 @@
-package tk3.labyrinth.map.generator;
+package tk3.labyrinth.map;
 
 public class Run {
 

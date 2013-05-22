@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Bundle-Name: Map Generator
-Bundle-SymbolicName: tk3.labyrinth.map.generator
+Bundle-Name: Map
+Bundle-SymbolicName: tk3.labyrinth.map
 Bundle-Version: 0.1
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Provide-Package: tk3.labyrinth.core.shared

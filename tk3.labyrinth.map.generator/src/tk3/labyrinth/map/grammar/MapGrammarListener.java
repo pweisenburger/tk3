@@ -1,9 +1,8 @@
 // Generated from src/tk3/labyrinth/map/generator/grammar/MapGrammar.g4 by ANTLR 4.0
 
-    package tk3.labyrinth.map.generator.grammar;
+    package tk3.labyrinth.map.grammar;
 
-import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 public interface MapGrammarListener extends ParseTreeListener {
 	void enterId(MapGrammarParser.IdContext ctx);
