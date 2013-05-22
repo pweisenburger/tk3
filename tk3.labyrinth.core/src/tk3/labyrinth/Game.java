@@ -11,18 +11,18 @@ public class Game {
 	private Field field;
 	private List<Player> players;
 	private Player ownPlayer;
-	private List<Observer> observers;
+	private List<GameObserver> observers;
 	private String id;
 	
-	public void addObserver(Observer o) {
+	public void addObserver(GameObserver o) {
 		observers.add(o);
 	}
 	
-	public void removeObserver(Observer o) {
+	public void removeObserver(GameObserver o) {
 		observers.remove(o);
 	}
 	
-	public List<Observer> getObservers() {
+	public List<GameObserver> getObservers() {
 		return Collections.unmodifiableList(observers);
 	}
 	

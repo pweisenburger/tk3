@@ -1,7 +1,7 @@
 package tk3.labyrinth.core.player;
 
 import tk3.labyrinth.Game;
-import tk3.labyrinth.Observer;
+import tk3.labyrinth.GameObserver;
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.GameElement;
 import tk3.labyrinth.core.shared.Position;
@@ -31,7 +31,7 @@ public class Player {
 		// inform observers
 		Position oldPosition = this.position;
 		this.position = position;
-		for (Observer o : game.getObservers())
+		for (GameObserver o : game.getObservers())
 			o.playerMoved(this, oldPosition);
 		
 		// activate and deactivate activatable objects
@@ -47,7 +47,7 @@ public class Player {
 					}
 				if (deactivate) {
 					button.getReferencedElement().deactivate(button);
-					for (Observer o : game.getObservers())
+					for (GameObserver o : game.getObservers())
 						o.elementActivated(button.getReferencedElement());
 				}
 			}
@@ -65,7 +65,7 @@ public class Player {
 					}
 				if (activate) {
 					button.getReferencedElement().activate(button);
-					for (Observer o : game.getObservers())
+					for (GameObserver o : game.getObservers())
 						o.elementActivated(button.getReferencedElement());
 				}
 			}

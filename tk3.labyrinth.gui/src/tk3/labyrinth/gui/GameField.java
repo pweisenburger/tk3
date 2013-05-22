@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 import tk3.labyrinth.Game;
-import tk3.labyrinth.Observer;
+import tk3.labyrinth.GameObserver;
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
 import tk3.labyrinth.core.gameelements.GameElement;
@@ -21,7 +21,7 @@ import tk3.labyrinth.core.shared.Position;
 import tk3.labyrinth.gui.RoomUtil.DoorEntry;
 
 @SuppressWarnings("serial")
-public class GameField extends JComponent implements Observer {
+public class GameField extends JComponent implements GameObserver {
 	private Game game;
 	private Map<Room, Point> roomPosition;
 	private Map<Door, DoorEntry> doorEntry;
