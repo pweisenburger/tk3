@@ -1,16 +1,16 @@
 package tk3.labyrinth.core.gamefield;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public class Field {
-	private List<Room> rooms;
+	private Collection<Room> rooms;
 	
-	public Field(List<Room> rooms) {
+	public Field(Collection<Room> rooms) {
 		this.rooms = rooms;
 	}
 	
-	public List<Room> getRooms() {
-		return Collections.unmodifiableList(rooms);
+	public Collection<Room> getRooms() {
+		return Collections.unmodifiableCollection(rooms);
 	}
 }

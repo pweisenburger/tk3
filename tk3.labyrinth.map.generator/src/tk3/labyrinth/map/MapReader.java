@@ -1,7 +1,10 @@
 package tk3.labyrinth.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -9,6 +12,10 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
+import tk3.labyrinth.core.gameelements.Finish;
+import tk3.labyrinth.core.gameelements.GameElement;
+import tk3.labyrinth.core.gameelements.Start;
+import tk3.labyrinth.core.gameelements.Wall;
 import tk3.labyrinth.core.gamefield.Field;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.map.grammar.MapGrammarListener;
@@ -29,15 +36,19 @@ import tk3.labyrinth.map.grammar.MapGrammarParser.TypeContext;
 public class MapReader implements MapGrammarListener {
 
 	private Field field;
-	
+
 	private Map<String, Door> idToDoor = new HashMap<>();
-	
+
 	private Map<String, Button> idToButton = new HashMap<>();
-	
+
 	private Map<String, Room> idToRoom = new HashMap<>();
-	
+
+	private List<Door> currentDoors = new ArrayList<>();
+
+	private List<Button> currentButtons = new ArrayList<>();
+
 	private String roomType;
-	
+
 	public Field getResult() {
 		return field;
 	}
@@ -84,12 +95,12 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void enterField(FieldContext ctx) {
-		field = new Field(ctx.name().STRING().getText());
+
 	}
 
 	@Override
 	public void exitField(FieldContext ctx) {
-
+		field = new Field(idToRoom.values());
 	}
 
 	@Override
@@ -108,7 +119,7 @@ public class MapReader implements MapGrammarListener {
 		String activateId = ctx.activate().id().getText();
 		idToButton.put(id, new Button());
 		if (idToButton.containsKey(activateId)) {
-			idToButton.get(id).setReferencedElement(idToDoor.get(activateId));
+			idToButton.get(id).initReferencedElement(idToDoor.get(activateId));
 		}
 	}
 
@@ -129,7 +140,10 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void enterContain_buttons(Contain_buttonsContext ctx) {
-
+		currentButtons.clear();
+		for (IdContext id : ctx.id()) {
+			currentButtons.add(idToButton.get(id));
+		}
 	}
 
 	@Override
@@ -143,10 +157,10 @@ public class MapReader implements MapGrammarListener {
 		String goalId = ctx.door_goal().id().getText();
 		idToDoor.put(id, new Door());
 		if (idToDoor.containsKey(goalId)) {
-			idToDoor.get(id).setGoal(idToDoor.get(goalId));
-			idToDoor.get(goalId).setGoal(idToDoor.get(id));
+			idToDoor.get(id).initDoor(idToDoor.get(goalId));
+			idToDoor.get(goalId).initDoor(idToDoor.get(id));
 		}
-		
+
 	}
 
 	@Override
@@ -156,7 +170,10 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void enterContain_doors(Contain_doorsContext ctx) {
-
+		currentDoors.clear();
+		for (IdContext id : ctx.id()) {
+			currentDoors.add(idToDoor.get(id));
+		}
 	}
 
 	@Override
@@ -167,7 +184,7 @@ public class MapReader implements MapGrammarListener {
 	@Override
 	public void enterType(TypeContext ctx) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -188,18 +205,19 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void enterRoom(RoomContext ctx) {
-		String id = ctx.id().getText();
-		Room room = new Room(id);
-		idToRoom.put(id, room);
 		
-		//TODO Türen hinzufügen
-		//TODO Knöpfe hinzufügen
 	}
 
 	@Override
 	public void exitRoom(RoomContext ctx) {
 		String id = ctx.id().getText();
-		idToRoom.get(id);
+		GameElement[][] elementMatrix = createRoom();
+		placeDoors(elementMatrix, currentDoors);
+		placeElements(elementMatrix, currentButtons);
+		
+		 Room room = new Room(elementMatrix);
+		 room.setId(id);
+		 idToRoom.put(id, room);
 	}
 
 	@Override
@@ -210,5 +228,54 @@ public class MapReader implements MapGrammarListener {
 	@Override
 	public void exitRoom_attr(Room_attrContext ctx) {
 
+	}
+
+	private GameElement[][] createRoom() {
+		int x = 2 + currentDoors.size();
+		int y = 2 + currentButtons.size();
+
+		GameElement[][] elementMatrix = new GameElement[x][y];
+		for (int i = 0; i < x; i++) {
+			elementMatrix[i][0] = new Wall();
+			elementMatrix[i][y] = new Wall();
+		}
+		for (int i = 0; i < y; i++) {
+			elementMatrix[0][i] = new Wall();
+			elementMatrix[x][i] = new Wall();
+		}
+		return elementMatrix;
+	}
+
+	private void placeDoors(GameElement[][] elementMatrix,
+			List<Door> currentDoors2) {
+		Random random = new Random();
+		for (Door door : currentDoors) {
+			int x;
+			int y;
+			do {
+				if (random.nextBoolean()) {
+					x = random.nextBoolean() ? 0 : elementMatrix.length - 1;
+					y = random.nextInt(elementMatrix[0].length - 1);
+				} else {
+					x = random.nextInt(elementMatrix.length - 1);
+					y = random.nextBoolean() ? 0 : elementMatrix[0].length - 1;
+				}
+			} while (!Door.class.isInstance(elementMatrix[x][y]));
+			elementMatrix[x][y] = door;
+		}
+	}
+
+	private void placeElements(GameElement[][] elementMatrix,
+			List<? extends GameElement> elementsToAdd) {
+		Random random = new Random();
+		for (GameElement element : elementsToAdd) {
+			int x;
+			int y;
+			do {
+				x = random.nextInt(elementMatrix.length - 1);
+				y = random.nextInt(elementMatrix[0].length - 1);
+			} while (x == 0 || y == 0 || elementMatrix[x][y] != null);
+			elementMatrix[x][y] = element;
+		}
 	}
 }
