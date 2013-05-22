@@ -11,18 +11,18 @@ public class Game {
 	private Field field;
 	private List<Player> players;
 	private Player ownPlayer;
-	private List<Observer> observers;
+	private List<GameObserver> observers;
 	private String id;
 	
-	public void addObserver(Observer o) {
+	public void addObserver(GameObserver o) {
 		observers.add(o);
 	}
 	
-	public void removeObserver(Observer o) {
+	public void removeObserver(GameObserver o) {
 		observers.remove(o);
 	}
 	
-	public List<Observer> getObservers() {
+	public List<GameObserver> getObservers() {
 		return Collections.unmodifiableList(observers);
 	}
 	
@@ -33,17 +33,19 @@ public class Game {
 	public Game(String id, Field field, List<Player> players) {
 		this.id = id;
 		this.field = field;
-		this.players = players;
-		
-		observers = new ArrayList<>();
+		this.players = new ArrayList<>();
+		this.observers = new ArrayList<>();
 		
 		for (Player player : players)
-			player.initGame(this);
+			addPlayer(player);
 	}
 	
 	public void addPlayer(Player player) {
 		players.add(player);
 		player.initGame(this);
+		
+		// trigger updates
+		player.move(player.getPosition());
 	}
 	
 	public void removePlayer(Player player) {

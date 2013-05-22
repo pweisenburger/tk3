@@ -4,12 +4,13 @@ import org.umundo.core.Message;
 import org.umundo.core.Node;
 
 import tk3.labyrinth.Game;
-import tk3.labyrinth.Observer;
+import tk3.labyrinth.GameObserver;
 import tk3.labyrinth.core.gameelements.GameElement;
+import tk3.labyrinth.core.gameelements.IActivatable;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
 
-public class God implements Observer {
+public class God implements GameObserver {
 	
 	public final static String PREFIX = "tk3.labyrinth.";
 	
@@ -39,8 +40,11 @@ public class God implements Observer {
 	
 	// Umundo Schicht wird informiert, dass sich etwas im Spiel getan hat: 
 	@Override
-	public void elementActivated(GameElement ge) {
-		Message msg = MessageFactory.createElementActivatedMessage(game.getOwnPlayer().getId(), ge, null); //TODO: action=null!?
+	public void elementActivated(IActivatable ge) {
+		if (ge instanceof GameElement) {
+			Message msg = MessageFactory.createElementActivatedMessage(game.getOwnPlayer().getId(), (GameElement) ge, null); //TODO: action=null!?
+			gameConnection.send(msg);
+		}
 	}
 
 	@Override

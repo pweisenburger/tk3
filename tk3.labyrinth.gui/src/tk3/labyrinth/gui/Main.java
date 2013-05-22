@@ -56,8 +56,9 @@ public class Main {
 		
 		List<Room> rooms = Arrays.asList(new Room(elements0), new Room(elements1), new Room(elements2));
 		Field field = new Field(rooms);
-		List<Player> players = Arrays.asList(new Player("player", new Position(rooms.get(0), 1, 1)));
+		List<Player> players = Arrays.asList(new Player("me", new Position(rooms.get(0), 1, 2)), new Player("other", new Position(rooms.get(0), 2, 3)));
 		Game game = new Game("Test Game", field, players);
+		game.setOwnPlayer(players.get(0));
 		
 		new GameFrame(game);
 	}
