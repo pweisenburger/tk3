@@ -13,6 +13,7 @@ import tk3.labyrinth.Observer;
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
 import tk3.labyrinth.core.gameelements.GameElement;
+import tk3.labyrinth.core.gameelements.IActivatable;
 import tk3.labyrinth.core.gameelements.Wall;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.core.player.Player;
@@ -41,44 +42,11 @@ public class GameField extends JComponent implements Observer {
 	
 	@Override
 	public void playerMoved(Player player, Position oldPosition) {
-		//TODO this should be done in core
-		GameElement ge = getGameElement(oldPosition);
-		boolean activated = false;
-		if (ge instanceof Button) {
-			Button button = (Button) ge;
-			if (button.getReferencedElement() != null) {
-				for (Player p : game.getPlayers())
-					if (p.getPosition().equals(oldPosition))  {
-						button.getReferencedElement().activate(button);
-						activated = true;
-						break;
-					}
-				if (!activated)
-					button.getReferencedElement().deactivate(button);
-			}
-		}
-		
-		ge = getGameElement(player.getPosition());
-		activated = false;
-		if (ge instanceof Button) {
-			Button button = (Button) ge;
-			if (button.getReferencedElement() != null) {
-				for (Player p : game.getPlayers())
-					if (p.getPosition().equals(player.getPosition()))  {
-						button.getReferencedElement().activate(button);
-						activated = true;
-						break;
-					}
-				if (!activated)
-					button.getReferencedElement().deactivate(button);
-			}
-		}
-		
 		repaint();
 	}
 	
 	@Override
-	public void elementActivated(GameElement ge) {
+	public void elementActivated(IActivatable ge) {
 		//
 	}
 	

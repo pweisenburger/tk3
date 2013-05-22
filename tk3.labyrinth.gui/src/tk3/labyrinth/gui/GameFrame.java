@@ -2,7 +2,6 @@ package tk3.labyrinth.gui;
 
 import java.awt.Dimension;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import tk3.labyrinth.Game;
