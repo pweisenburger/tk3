@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import tk3.labyrinth.Game;
+import tk3.labyrinth.GameManager;
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
 import tk3.labyrinth.core.gameelements.GameElement;
@@ -15,6 +16,11 @@ import tk3.labyrinth.core.shared.Position;
 
 public class Main {
 	public static void main(String[] args) {
+		//TODO:setDefaultCloseOperation  just testing
+		new GameFrame(new GameManager()).setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
+	}
+	
+	public static Game testGame() {
 		Button button0;
 		Door door0, door1, door2, door3;
 		
@@ -56,9 +62,10 @@ public class Main {
 		
 		List<Room> rooms = Arrays.asList(new Room(elements0), new Room(elements1), new Room(elements2));
 		Field field = new Field(rooms);
-		List<Player> players = Arrays.asList(new Player("player", new Position(rooms.get(0), 1, 1)));
+		List<Player> players = Arrays.asList(new Player("me", new Position(rooms.get(0), 1, 2)), new Player("other", new Position(rooms.get(0), 2, 3)));
 		Game game = new Game("Test Game", field, players);
+		game.setOwnPlayer(players.get(0));
 		
-		new GameFrame(game);
+		return game;
 	}
 }
