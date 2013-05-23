@@ -240,10 +240,8 @@ public class MapGrammarParser extends Parser {
 	}
 
 	public static class Door_goalContext extends ParserRuleContext {
-		public IdContext id() {
-			return getRuleContext(IdContext.class,0);
-		}
 		public TerminalNode GOAL() { return getToken(MapGrammarParser.GOAL, 0); }
+		public TerminalNode STRING() { return getToken(MapGrammarParser.STRING, 0); }
 		public Door_goalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -266,7 +264,7 @@ public class MapGrammarParser extends Parser {
 			{
 			setState(57); match(GOAL);
 			setState(58); match(3);
-			setState(59); id();
+			setState(59); match(STRING);
 			}
 		}
 		catch (RecognitionException re) {
@@ -325,10 +323,8 @@ public class MapGrammarParser extends Parser {
 	}
 
 	public static class ActivateContext extends ParserRuleContext {
-		public IdContext id() {
-			return getRuleContext(IdContext.class,0);
-		}
 		public TerminalNode ACTIVATE() { return getToken(MapGrammarParser.ACTIVATE, 0); }
+		public TerminalNode STRING() { return getToken(MapGrammarParser.STRING, 0); }
 		public ActivateContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -351,7 +347,7 @@ public class MapGrammarParser extends Parser {
 			{
 			setState(65); match(ACTIVATE);
 			setState(66); match(3);
-			setState(67); id();
+			setState(67); match(STRING);
 			}
 		}
 		catch (RecognitionException re) {
@@ -418,13 +414,11 @@ public class MapGrammarParser extends Parser {
 	}
 
 	public static class Contain_doorsContext extends ParserRuleContext {
-		public List<IdContext> id() {
-			return getRuleContexts(IdContext.class);
+		public TerminalNode STRING(int i) {
+			return getToken(MapGrammarParser.STRING, i);
 		}
 		public TerminalNode DOOR() { return getToken(MapGrammarParser.DOOR, 0); }
-		public IdContext id(int i) {
-			return getRuleContext(IdContext.class,i);
-		}
+		public List<TerminalNode> STRING() { return getTokens(MapGrammarParser.STRING); }
 		public Contain_doorsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -451,7 +445,7 @@ public class MapGrammarParser extends Parser {
 				{
 				setState(75); match(DOOR);
 				setState(76); match(3);
-				setState(77); id();
+				setState(77); match(STRING);
 				setState(82);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
@@ -459,7 +453,7 @@ public class MapGrammarParser extends Parser {
 					{
 					{
 					setState(78); match(1);
-					setState(79); id();
+					setState(79); match(STRING);
 					}
 					}
 					setState(84);
@@ -490,13 +484,11 @@ public class MapGrammarParser extends Parser {
 	}
 
 	public static class Contain_buttonsContext extends ParserRuleContext {
-		public List<IdContext> id() {
-			return getRuleContexts(IdContext.class);
-		}
 		public TerminalNode BUTTON() { return getToken(MapGrammarParser.BUTTON, 0); }
-		public IdContext id(int i) {
-			return getRuleContext(IdContext.class,i);
+		public TerminalNode STRING(int i) {
+			return getToken(MapGrammarParser.STRING, i);
 		}
+		public List<TerminalNode> STRING() { return getTokens(MapGrammarParser.STRING); }
 		public Contain_buttonsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -523,7 +515,7 @@ public class MapGrammarParser extends Parser {
 				{
 				setState(88); match(BUTTON);
 				setState(89); match(3);
-				setState(90); id();
+				setState(90); match(STRING);
 				setState(95);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
@@ -531,7 +523,7 @@ public class MapGrammarParser extends Parser {
 					{
 					{
 					setState(91); match(1);
-					setState(92); id();
+					setState(92); match(STRING);
 					}
 					}
 					setState(97);
@@ -846,18 +838,18 @@ public class MapGrammarParser extends Parser {
 		"\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,/\3\2\2\2-+\3\2\2\2.\60\5\16\b\2/.\3"+
 		"\2\2\2\60\61\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\3\3\2\2\2\63\64\7\b"+
 		"\2\2\64\65\7\5\2\2\65\66\7\22\2\2\66\5\3\2\2\2\678\7\r\2\289\5\36\20\2"+
-		"9:\5\b\5\2:\7\3\2\2\2;<\7\13\2\2<=\7\5\2\2=>\5\36\20\2>\t\3\2\2\2?@\7"+
-		"\16\2\2@A\5\36\20\2AB\5\f\7\2B\13\3\2\2\2CD\7\n\2\2DE\7\5\2\2EF\5\36\20"+
-		"\2F\r\3\2\2\2GH\7\17\2\2HI\5\4\3\2IJ\5\24\13\2JK\5\20\t\2KL\5\22\n\2L"+
-		"\17\3\2\2\2MN\7\r\2\2NO\7\5\2\2OT\5\36\20\2PQ\7\3\2\2QS\5\36\20\2RP\3"+
-		"\2\2\2SV\3\2\2\2TR\3\2\2\2TU\3\2\2\2UY\3\2\2\2VT\3\2\2\2WY\7\4\2\2XM\3"+
-		"\2\2\2XW\3\2\2\2Y\21\3\2\2\2Z[\7\16\2\2[\\\7\5\2\2\\a\5\36\20\2]^\7\3"+
-		"\2\2^`\5\36\20\2_]\3\2\2\2`c\3\2\2\2a_\3\2\2\2ab\3\2\2\2bf\3\2\2\2ca\3"+
-		"\2\2\2df\7\4\2\2eZ\3\2\2\2ed\3\2\2\2f\23\3\2\2\2gk\5\26\f\2hk\5\34\17"+
-		"\2ik\7\4\2\2jg\3\2\2\2jh\3\2\2\2ji\3\2\2\2k\25\3\2\2\2lm\7\6\2\2mn\7\5"+
-		"\2\2nq\5\30\r\2oq\5\32\16\2pl\3\2\2\2po\3\2\2\2q\27\3\2\2\2rs\7\20\2\2"+
-		"s\31\3\2\2\2tu\7\21\2\2u\33\3\2\2\2vw\7\7\2\2wx\7\5\2\2xy\7\23\2\2y\35"+
-		"\3\2\2\2z{\7\t\2\2{|\7\5\2\2|}\7\22\2\2}\37\3\2\2\2\13%+\61TXaejp";
+		"9:\5\b\5\2:\7\3\2\2\2;<\7\13\2\2<=\7\5\2\2=>\7\22\2\2>\t\3\2\2\2?@\7\16"+
+		"\2\2@A\5\36\20\2AB\5\f\7\2B\13\3\2\2\2CD\7\n\2\2DE\7\5\2\2EF\7\22\2\2"+
+		"F\r\3\2\2\2GH\7\17\2\2HI\5\4\3\2IJ\5\24\13\2JK\5\20\t\2KL\5\22\n\2L\17"+
+		"\3\2\2\2MN\7\r\2\2NO\7\5\2\2OT\7\22\2\2PQ\7\3\2\2QS\7\22\2\2RP\3\2\2\2"+
+		"SV\3\2\2\2TR\3\2\2\2TU\3\2\2\2UY\3\2\2\2VT\3\2\2\2WY\7\4\2\2XM\3\2\2\2"+
+		"XW\3\2\2\2Y\21\3\2\2\2Z[\7\16\2\2[\\\7\5\2\2\\a\7\22\2\2]^\7\3\2\2^`\7"+
+		"\22\2\2_]\3\2\2\2`c\3\2\2\2a_\3\2\2\2ab\3\2\2\2bf\3\2\2\2ca\3\2\2\2df"+
+		"\7\4\2\2eZ\3\2\2\2ed\3\2\2\2f\23\3\2\2\2gk\5\26\f\2hk\5\34\17\2ik\7\4"+
+		"\2\2jg\3\2\2\2jh\3\2\2\2ji\3\2\2\2k\25\3\2\2\2lm\7\6\2\2mn\7\5\2\2nq\5"+
+		"\30\r\2oq\5\32\16\2pl\3\2\2\2po\3\2\2\2q\27\3\2\2\2rs\7\20\2\2s\31\3\2"+
+		"\2\2tu\7\21\2\2u\33\3\2\2\2vw\7\7\2\2wx\7\5\2\2xy\7\23\2\2y\35\3\2\2\2"+
+		"z{\7\t\2\2{|\7\5\2\2|}\7\22\2\2}\37\3\2\2\2\13%+\61TXaejp";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {
