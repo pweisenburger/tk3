@@ -28,10 +28,12 @@ public class MapGrammarParser extends Parser {
 	public static final int
 		RULE_field = 0, RULE_name = 1, RULE_door = 2, RULE_door_goal = 3, RULE_button = 4, 
 		RULE_activate = 5, RULE_room = 6, RULE_contain_doors = 7, RULE_contain_buttons = 8, 
-		RULE_room_attr = 9, RULE_type = 10, RULE_max_player = 11, RULE_id = 12;
+		RULE_room_attr = 9, RULE_type = 10, RULE_start = 11, RULE_finish = 12, 
+		RULE_max_player = 13, RULE_id = 14;
 	public static final String[] ruleNames = {
 		"field", "name", "door", "door_goal", "button", "activate", "room", "contain_doors", 
-		"contain_buttons", "room_attr", "type", "max_player", "id"
+		"contain_buttons", "room_attr", "type", "start", "finish", "max_player", 
+		"id"
 	};
 
 	@Override
@@ -94,44 +96,44 @@ public class MapGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(26); match(FIELD);
-			setState(27); name();
-			setState(31);
+			setState(30); match(FIELD);
+			setState(31); name();
+			setState(35);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==DOOR) {
 				{
 				{
-				setState(28); door();
+				setState(32); door();
 				}
 				}
-				setState(33);
+				setState(37);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(37);
+			setState(41);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==BUTTON) {
 				{
 				{
-				setState(34); button();
+				setState(38); button();
 				}
 				}
-				setState(39);
+				setState(43);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(41); 
+			setState(45); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(40); room();
+				setState(44); room();
 				}
 				}
-				setState(43); 
+				setState(47); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==ROOM );
@@ -171,9 +173,9 @@ public class MapGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(45); match(NAME);
-			setState(46); match(3);
-			setState(47); match(STRING);
+			setState(49); match(NAME);
+			setState(50); match(3);
+			setState(51); match(STRING);
 			}
 		}
 		catch (RecognitionException re) {
@@ -215,9 +217,9 @@ public class MapGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(49); match(DOOR);
-			setState(50); id();
-			setState(51); door_goal();
+			setState(53); match(DOOR);
+			setState(54); id();
+			setState(55); door_goal();
 			}
 		}
 		catch (RecognitionException re) {
@@ -256,9 +258,9 @@ public class MapGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(53); match(GOAL);
-			setState(54); match(3);
-			setState(55); id();
+			setState(57); match(GOAL);
+			setState(58); match(3);
+			setState(59); id();
 			}
 		}
 		catch (RecognitionException re) {
@@ -300,9 +302,9 @@ public class MapGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(57); match(BUTTON);
-			setState(58); id();
-			setState(59); activate();
+			setState(61); match(BUTTON);
+			setState(62); id();
+			setState(63); activate();
 			}
 		}
 		catch (RecognitionException re) {
@@ -341,9 +343,9 @@ public class MapGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(61); match(ACTIVATE);
-			setState(62); match(3);
-			setState(63); id();
+			setState(65); match(ACTIVATE);
+			setState(66); match(3);
+			setState(67); id();
 			}
 		}
 		catch (RecognitionException re) {
@@ -358,12 +360,12 @@ public class MapGrammarParser extends Parser {
 	}
 
 	public static class RoomContext extends ParserRuleContext {
-		public IdContext id() {
-			return getRuleContext(IdContext.class,0);
-		}
 		public TerminalNode ROOM() { return getToken(MapGrammarParser.ROOM, 0); }
 		public Room_attrContext room_attr() {
 			return getRuleContext(Room_attrContext.class,0);
+		}
+		public NameContext name() {
+			return getRuleContext(NameContext.class,0);
 		}
 		public Contain_buttonsContext contain_buttons() {
 			return getRuleContext(Contain_buttonsContext.class,0);
@@ -391,11 +393,11 @@ public class MapGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(65); match(ROOM);
-			setState(66); id();
-			setState(67); room_attr();
-			setState(68); contain_doors();
-			setState(69); contain_buttons();
+			setState(69); match(ROOM);
+			setState(70); name();
+			setState(71); room_attr();
+			setState(72); contain_doors();
+			setState(73); contain_buttons();
 			}
 		}
 		catch (RecognitionException re) {
@@ -436,25 +438,25 @@ public class MapGrammarParser extends Parser {
 		enterRule(_localctx, 14, RULE_contain_doors);
 		int _la;
 		try {
-			setState(82);
+			setState(86);
 			switch (_input.LA(1)) {
 			case DOOR:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(71); match(DOOR);
-				setState(72); match(3);
-				setState(73); id();
-				setState(78);
+				setState(75); match(DOOR);
+				setState(76); match(3);
+				setState(77); id();
+				setState(82);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==1) {
 					{
 					{
-					setState(74); match(1);
-					setState(75); id();
+					setState(78); match(1);
+					setState(79); id();
 					}
 					}
-					setState(80);
+					setState(84);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -463,7 +465,7 @@ public class MapGrammarParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(81); match(2);
+				setState(85); match(2);
 				}
 				break;
 			default:
@@ -508,25 +510,25 @@ public class MapGrammarParser extends Parser {
 		enterRule(_localctx, 16, RULE_contain_buttons);
 		int _la;
 		try {
-			setState(95);
+			setState(99);
 			switch (_input.LA(1)) {
 			case BUTTON:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(84); match(BUTTON);
-				setState(85); match(3);
-				setState(86); id();
-				setState(91);
+				setState(88); match(BUTTON);
+				setState(89); match(3);
+				setState(90); id();
+				setState(95);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==1) {
 					{
 					{
-					setState(87); match(1);
-					setState(88); id();
+					setState(91); match(1);
+					setState(92); id();
 					}
 					}
-					setState(93);
+					setState(97);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -535,7 +537,7 @@ public class MapGrammarParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(94); match(2);
+				setState(98); match(2);
 				}
 				break;
 			default:
@@ -578,24 +580,25 @@ public class MapGrammarParser extends Parser {
 		Room_attrContext _localctx = new Room_attrContext(_ctx, getState());
 		enterRule(_localctx, 18, RULE_room_attr);
 		try {
-			setState(100);
+			setState(104);
 			switch (_input.LA(1)) {
 			case TYPE:
+			case FINISH:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(97); type();
+				setState(101); type();
 				}
 				break;
 			case MAXIMUM:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(98); max_player();
+				setState(102); max_player();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(99); match(2);
+				setState(103); match(2);
 				}
 				break;
 			default:
@@ -614,8 +617,12 @@ public class MapGrammarParser extends Parser {
 	}
 
 	public static class TypeContext extends ParserRuleContext {
-		public TerminalNode FINISH() { return getToken(MapGrammarParser.FINISH, 0); }
-		public TerminalNode START() { return getToken(MapGrammarParser.START, 0); }
+		public FinishContext finish() {
+			return getRuleContext(FinishContext.class,0);
+		}
+		public StartContext start() {
+			return getRuleContext(StartContext.class,0);
+		}
 		public TerminalNode TYPE() { return getToken(MapGrammarParser.TYPE, 0); }
 		public TypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -634,18 +641,97 @@ public class MapGrammarParser extends Parser {
 	public final TypeContext type() throws RecognitionException {
 		TypeContext _localctx = new TypeContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_type);
-		int _la;
+		try {
+			setState(110);
+			switch (_input.LA(1)) {
+			case TYPE:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(106); match(TYPE);
+				setState(107); match(3);
+				setState(108); start();
+				}
+				break;
+			case FINISH:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(109); finish();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class StartContext extends ParserRuleContext {
+		public TerminalNode START() { return getToken(MapGrammarParser.START, 0); }
+		public StartContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_start; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MapGrammarListener ) ((MapGrammarListener)listener).enterStart(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MapGrammarListener ) ((MapGrammarListener)listener).exitStart(this);
+		}
+	}
+
+	public final StartContext start() throws RecognitionException {
+		StartContext _localctx = new StartContext(_ctx, getState());
+		enterRule(_localctx, 22, RULE_start);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(102); match(TYPE);
-			setState(103); match(3);
-			setState(104);
-			_la = _input.LA(1);
-			if ( !(_la==START || _la==FINISH) ) {
-			_errHandler.recoverInline(this);
+			setState(112); match(START);
 			}
-			consume();
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class FinishContext extends ParserRuleContext {
+		public TerminalNode FINISH() { return getToken(MapGrammarParser.FINISH, 0); }
+		public FinishContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_finish; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MapGrammarListener ) ((MapGrammarListener)listener).enterFinish(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MapGrammarListener ) ((MapGrammarListener)listener).exitFinish(this);
+		}
+	}
+
+	public final FinishContext finish() throws RecognitionException {
+		FinishContext _localctx = new FinishContext(_ctx, getState());
+		enterRule(_localctx, 24, RULE_finish);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(114); match(FINISH);
 			}
 		}
 		catch (RecognitionException re) {
@@ -678,13 +764,13 @@ public class MapGrammarParser extends Parser {
 
 	public final Max_playerContext max_player() throws RecognitionException {
 		Max_playerContext _localctx = new Max_playerContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_max_player);
+		enterRule(_localctx, 26, RULE_max_player);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(106); match(MAXIMUM);
-			setState(107); match(3);
-			setState(108); match(N);
+			setState(116); match(MAXIMUM);
+			setState(117); match(3);
+			setState(118); match(N);
 			}
 		}
 		catch (RecognitionException re) {
@@ -717,13 +803,13 @@ public class MapGrammarParser extends Parser {
 
 	public final IdContext id() throws RecognitionException {
 		IdContext _localctx = new IdContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_id);
+		enterRule(_localctx, 28, RULE_id);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(110); match(ID);
-			setState(111); match(3);
-			setState(112); match(STRING);
+			setState(120); match(ID);
+			setState(121); match(3);
+			setState(122); match(STRING);
 			}
 		}
 		catch (RecognitionException re) {
@@ -738,32 +824,34 @@ public class MapGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\2\3\24u\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t"+
-		"\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t\16\3\2\3\2\3\2\7\2 \n\2\f"+
-		"\2\16\2#\13\2\3\2\7\2&\n\2\f\2\16\2)\13\2\3\2\6\2,\n\2\r\2\16\2-\3\3\3"+
-		"\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7"+
-		"\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\7\tO\n\t\f\t\16\tR\13"+
-		"\t\3\t\5\tU\n\t\3\n\3\n\3\n\3\n\3\n\7\n\\\n\n\f\n\16\n_\13\n\3\n\5\nb"+
-		"\n\n\3\13\3\13\3\13\5\13g\n\13\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\16\3"+
-		"\16\3\16\3\16\3\16\2\17\2\4\6\b\n\f\16\20\22\24\26\30\32\2\3\3\20\21p"+
-		"\2\34\3\2\2\2\4/\3\2\2\2\6\63\3\2\2\2\b\67\3\2\2\2\n;\3\2\2\2\f?\3\2\2"+
-		"\2\16C\3\2\2\2\20T\3\2\2\2\22a\3\2\2\2\24f\3\2\2\2\26h\3\2\2\2\30l\3\2"+
-		"\2\2\32p\3\2\2\2\34\35\7\f\2\2\35!\5\4\3\2\36 \5\6\4\2\37\36\3\2\2\2 "+
-		"#\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"\'\3\2\2\2#!\3\2\2\2$&\5\n\6\2%$\3\2"+
-		"\2\2&)\3\2\2\2\'%\3\2\2\2\'(\3\2\2\2(+\3\2\2\2)\'\3\2\2\2*,\5\16\b\2+"+
-		"*\3\2\2\2,-\3\2\2\2-+\3\2\2\2-.\3\2\2\2.\3\3\2\2\2/\60\7\b\2\2\60\61\7"+
-		"\5\2\2\61\62\7\22\2\2\62\5\3\2\2\2\63\64\7\r\2\2\64\65\5\32\16\2\65\66"+
-		"\5\b\5\2\66\7\3\2\2\2\678\7\13\2\289\7\5\2\29:\5\32\16\2:\t\3\2\2\2;<"+
-		"\7\16\2\2<=\5\32\16\2=>\5\f\7\2>\13\3\2\2\2?@\7\n\2\2@A\7\5\2\2AB\5\32"+
-		"\16\2B\r\3\2\2\2CD\7\17\2\2DE\5\32\16\2EF\5\24\13\2FG\5\20\t\2GH\5\22"+
-		"\n\2H\17\3\2\2\2IJ\7\r\2\2JK\7\5\2\2KP\5\32\16\2LM\7\3\2\2MO\5\32\16\2"+
-		"NL\3\2\2\2OR\3\2\2\2PN\3\2\2\2PQ\3\2\2\2QU\3\2\2\2RP\3\2\2\2SU\7\4\2\2"+
-		"TI\3\2\2\2TS\3\2\2\2U\21\3\2\2\2VW\7\16\2\2WX\7\5\2\2X]\5\32\16\2YZ\7"+
-		"\3\2\2Z\\\5\32\16\2[Y\3\2\2\2\\_\3\2\2\2][\3\2\2\2]^\3\2\2\2^b\3\2\2\2"+
-		"_]\3\2\2\2`b\7\4\2\2aV\3\2\2\2a`\3\2\2\2b\23\3\2\2\2cg\5\26\f\2dg\5\30"+
-		"\r\2eg\7\4\2\2fc\3\2\2\2fd\3\2\2\2fe\3\2\2\2g\25\3\2\2\2hi\7\6\2\2ij\7"+
-		"\5\2\2jk\t\2\2\2k\27\3\2\2\2lm\7\7\2\2mn\7\5\2\2no\7\23\2\2o\31\3\2\2"+
-		"\2pq\7\t\2\2qr\7\5\2\2rs\7\22\2\2s\33\3\2\2\2\n!\'-PT]af";
+		"\2\3\24\177\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
+		"\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20"+
+		"\3\2\3\2\3\2\7\2$\n\2\f\2\16\2\'\13\2\3\2\7\2*\n\2\f\2\16\2-\13\2\3\2"+
+		"\6\2\60\n\2\r\2\16\2\61\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3"+
+		"\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t"+
+		"\3\t\3\t\7\tS\n\t\f\t\16\tV\13\t\3\t\5\tY\n\t\3\n\3\n\3\n\3\n\3\n\7\n"+
+		"`\n\n\f\n\16\nc\13\n\3\n\5\nf\n\n\3\13\3\13\3\13\5\13k\n\13\3\f\3\f\3"+
+		"\f\3\f\5\fq\n\f\3\r\3\r\3\16\3\16\3\17\3\17\3\17\3\17\3\20\3\20\3\20\3"+
+		"\20\3\20\2\21\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36\2\2y\2 \3\2\2\2\4"+
+		"\63\3\2\2\2\6\67\3\2\2\2\b;\3\2\2\2\n?\3\2\2\2\fC\3\2\2\2\16G\3\2\2\2"+
+		"\20X\3\2\2\2\22e\3\2\2\2\24j\3\2\2\2\26p\3\2\2\2\30r\3\2\2\2\32t\3\2\2"+
+		"\2\34v\3\2\2\2\36z\3\2\2\2 !\7\f\2\2!%\5\4\3\2\"$\5\6\4\2#\"\3\2\2\2$"+
+		"\'\3\2\2\2%#\3\2\2\2%&\3\2\2\2&+\3\2\2\2\'%\3\2\2\2(*\5\n\6\2)(\3\2\2"+
+		"\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,/\3\2\2\2-+\3\2\2\2.\60\5\16\b\2/.\3"+
+		"\2\2\2\60\61\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\3\3\2\2\2\63\64\7\b"+
+		"\2\2\64\65\7\5\2\2\65\66\7\22\2\2\66\5\3\2\2\2\678\7\r\2\289\5\36\20\2"+
+		"9:\5\b\5\2:\7\3\2\2\2;<\7\13\2\2<=\7\5\2\2=>\5\36\20\2>\t\3\2\2\2?@\7"+
+		"\16\2\2@A\5\36\20\2AB\5\f\7\2B\13\3\2\2\2CD\7\n\2\2DE\7\5\2\2EF\5\36\20"+
+		"\2F\r\3\2\2\2GH\7\17\2\2HI\5\4\3\2IJ\5\24\13\2JK\5\20\t\2KL\5\22\n\2L"+
+		"\17\3\2\2\2MN\7\r\2\2NO\7\5\2\2OT\5\36\20\2PQ\7\3\2\2QS\5\36\20\2RP\3"+
+		"\2\2\2SV\3\2\2\2TR\3\2\2\2TU\3\2\2\2UY\3\2\2\2VT\3\2\2\2WY\7\4\2\2XM\3"+
+		"\2\2\2XW\3\2\2\2Y\21\3\2\2\2Z[\7\16\2\2[\\\7\5\2\2\\a\5\36\20\2]^\7\3"+
+		"\2\2^`\5\36\20\2_]\3\2\2\2`c\3\2\2\2a_\3\2\2\2ab\3\2\2\2bf\3\2\2\2ca\3"+
+		"\2\2\2df\7\4\2\2eZ\3\2\2\2ed\3\2\2\2f\23\3\2\2\2gk\5\26\f\2hk\5\34\17"+
+		"\2ik\7\4\2\2jg\3\2\2\2jh\3\2\2\2ji\3\2\2\2k\25\3\2\2\2lm\7\6\2\2mn\7\5"+
+		"\2\2nq\5\30\r\2oq\5\32\16\2pl\3\2\2\2po\3\2\2\2q\27\3\2\2\2rs\7\20\2\2"+
+		"s\31\3\2\2\2tu\7\21\2\2u\33\3\2\2\2vw\7\7\2\2wx\7\5\2\2xy\7\23\2\2y\35"+
+		"\3\2\2\2z{\7\t\2\2{|\7\5\2\2|}\7\22\2\2}\37\3\2\2\2\13%+\61TXaejp";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {

@@ -30,11 +30,17 @@ public class MapGrammarBaseListener implements MapGrammarListener {
 	@Override public void enterMax_player(MapGrammarParser.Max_playerContext ctx) { }
 	@Override public void exitMax_player(MapGrammarParser.Max_playerContext ctx) { }
 
+	@Override public void enterFinish(MapGrammarParser.FinishContext ctx) { }
+	@Override public void exitFinish(MapGrammarParser.FinishContext ctx) { }
+
 	@Override public void enterButton(MapGrammarParser.ButtonContext ctx) { }
 	@Override public void exitButton(MapGrammarParser.ButtonContext ctx) { }
 
 	@Override public void enterRoom_attr(MapGrammarParser.Room_attrContext ctx) { }
 	@Override public void exitRoom_attr(MapGrammarParser.Room_attrContext ctx) { }
+
+	@Override public void enterStart(MapGrammarParser.StartContext ctx) { }
+	@Override public void exitStart(MapGrammarParser.StartContext ctx) { }
 
 	@Override public void enterName(MapGrammarParser.NameContext ctx) { }
 	@Override public void exitName(MapGrammarParser.NameContext ctx) { }

@@ -13,11 +13,13 @@ door : DOOR id door_goal ;
 door_goal : GOAL'='id ;
 button : BUTTON id activate ;
 activate : ACTIVATE'='id ;
-room : ROOM id room_attr contain_doors contain_buttons ; 
+room : ROOM name room_attr contain_doors contain_buttons ; 
 contain_doors : DOOR'='id (','id)* | '' ;
 contain_buttons : BUTTON'='id(','id)* | '' ;
 room_attr : type | max_player | '' ;
-type : TYPE'=START|FINISH ;
+type : TYPE'='start|finish ;
+start : START ;
+finish : FINISH ;
 max_player : MAXIMUM'='N ;
 id : ID'='STRING ;
 

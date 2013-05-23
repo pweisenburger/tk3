@@ -26,14 +26,20 @@ import tk3.labyrinth.map.grammar.MapGrammarParser.Contain_doorsContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.DoorContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.Door_goalContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.FieldContext;
+import tk3.labyrinth.map.grammar.MapGrammarParser.FinishContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.IdContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.Max_playerContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.NameContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.RoomContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.Room_attrContext;
+import tk3.labyrinth.map.grammar.MapGrammarParser.StartContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.TypeContext;
 
 public class MapReader implements MapGrammarListener {
+	
+	private static final long seed = 1;
+	
+	private Random random = new Random(seed);
 
 	private Field field;
 
@@ -45,7 +51,7 @@ public class MapReader implements MapGrammarListener {
 
 	private List<Door> currentDoors = new ArrayList<>();
 
-	private List<Button> currentAddtional = new ArrayList<>();
+	private List<GameElement> currentAddtional = new ArrayList<>();
 
 	public Field getResult() {
 		return field;
@@ -186,7 +192,6 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void exitType(TypeContext ctx) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -207,14 +212,14 @@ public class MapReader implements MapGrammarListener {
 
 	@Override
 	public void exitRoom(RoomContext ctx) {
-		String id = ctx.id().getText();
+		String name = ctx.name().getText();
 		GameElement[][] elementMatrix = createRoom();
 		placeDoors(elementMatrix, currentDoors);
 		placeElements(elementMatrix, currentAddtional);
 		
 		 Room room = new Room(elementMatrix);
-		 room.setId(id);
-		 idToRoom.put(id, room);
+		 room.setId(name);
+		 idToRoom.put(name, room);
 	}
 
 	@Override
@@ -245,7 +250,6 @@ public class MapReader implements MapGrammarListener {
 
 	private void placeDoors(GameElement[][] elementMatrix,
 			List<Door> currentDoors2) {
-		Random random = new Random();
 		for (Door door : currentDoors) {
 			int x;
 			int y;
@@ -264,7 +268,6 @@ public class MapReader implements MapGrammarListener {
 
 	private void placeElements(GameElement[][] elementMatrix,
 			List<? extends GameElement> elementsToAdd) {
-		Random random = new Random();
 		for (GameElement element : elementsToAdd) {
 			int x;
 			int y;
@@ -274,5 +277,25 @@ public class MapReader implements MapGrammarListener {
 			} while (x == 0 || y == 0 || elementMatrix[x][y] != null);
 			elementMatrix[x][y] = element;
 		}
+	}
+
+	@Override
+	public void enterFinish(FinishContext ctx) {
+		currentAddtional.add(new Finish());
+	}
+
+	@Override
+	public void exitFinish(FinishContext ctx) {
+
+	}
+
+	@Override
+	public void enterStart(StartContext ctx) {
+		currentAddtional.add(new Start());
+	}
+
+	@Override
+	public void exitStart(StartContext ctx) {
+
 	}
 }

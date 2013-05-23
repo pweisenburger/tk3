@@ -27,11 +27,17 @@ public interface MapGrammarListener extends ParseTreeListener {
 	void enterMax_player(MapGrammarParser.Max_playerContext ctx);
 	void exitMax_player(MapGrammarParser.Max_playerContext ctx);
 
+	void enterFinish(MapGrammarParser.FinishContext ctx);
+	void exitFinish(MapGrammarParser.FinishContext ctx);
+
 	void enterButton(MapGrammarParser.ButtonContext ctx);
 	void exitButton(MapGrammarParser.ButtonContext ctx);
 
 	void enterRoom_attr(MapGrammarParser.Room_attrContext ctx);
 	void exitRoom_attr(MapGrammarParser.Room_attrContext ctx);
+
+	void enterStart(MapGrammarParser.StartContext ctx);
+	void exitStart(MapGrammarParser.StartContext ctx);
 
 	void enterName(MapGrammarParser.NameContext ctx);
 	void exitName(MapGrammarParser.NameContext ctx);
