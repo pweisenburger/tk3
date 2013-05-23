@@ -44,12 +44,17 @@ public class Game {
 		players.add(player);
 		player.initGame(this);
 		
+		for (GameObserver o : observers)
+			o.playerAdded(player);
+		
 		// trigger updates
 		player.move(player.getPosition());
 	}
 	
 	public void removePlayer(Player player) {
 		players.remove(player);
+		for (GameObserver o : observers)
+			o.playerRemoved(player);
 	}
 	
 	public Field getField() {
