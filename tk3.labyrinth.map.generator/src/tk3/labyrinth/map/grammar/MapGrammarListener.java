@@ -2,8 +2,7 @@
 
     package tk3.labyrinth.map.grammar;
 
-import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 public interface MapGrammarListener extends ParseTreeListener {
 	void enterDoor(MapGrammarParser.DoorContext ctx);
