@@ -8,8 +8,17 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class MapGrammarBaseListener implements MapGrammarListener {
+	@Override public void enterDoors(MapGrammarParser.DoorsContext ctx) { }
+	@Override public void exitDoors(MapGrammarParser.DoorsContext ctx) { }
+
 	@Override public void enterDoor(MapGrammarParser.DoorContext ctx) { }
 	@Override public void exitDoor(MapGrammarParser.DoorContext ctx) { }
+
+	@Override public void enterButtons(MapGrammarParser.ButtonsContext ctx) { }
+	@Override public void exitButtons(MapGrammarParser.ButtonsContext ctx) { }
+
+	@Override public void enterList(MapGrammarParser.ListContext ctx) { }
+	@Override public void exitList(MapGrammarParser.ListContext ctx) { }
 
 	@Override public void enterType(MapGrammarParser.TypeContext ctx) { }
 	@Override public void exitType(MapGrammarParser.TypeContext ctx) { }
@@ -32,23 +41,17 @@ public class MapGrammarBaseListener implements MapGrammarListener {
 	@Override public void enterFinish(MapGrammarParser.FinishContext ctx) { }
 	@Override public void exitFinish(MapGrammarParser.FinishContext ctx) { }
 
+	@Override public void enterStart(MapGrammarParser.StartContext ctx) { }
+	@Override public void exitStart(MapGrammarParser.StartContext ctx) { }
+
 	@Override public void enterButton(MapGrammarParser.ButtonContext ctx) { }
 	@Override public void exitButton(MapGrammarParser.ButtonContext ctx) { }
 
 	@Override public void enterRoom_attr(MapGrammarParser.Room_attrContext ctx) { }
 	@Override public void exitRoom_attr(MapGrammarParser.Room_attrContext ctx) { }
 
-	@Override public void enterStart(MapGrammarParser.StartContext ctx) { }
-	@Override public void exitStart(MapGrammarParser.StartContext ctx) { }
-
 	@Override public void enterName(MapGrammarParser.NameContext ctx) { }
 	@Override public void exitName(MapGrammarParser.NameContext ctx) { }
-
-	@Override public void enterContain_buttons(MapGrammarParser.Contain_buttonsContext ctx) { }
-	@Override public void exitContain_buttons(MapGrammarParser.Contain_buttonsContext ctx) { }
-
-	@Override public void enterContain_doors(MapGrammarParser.Contain_doorsContext ctx) { }
-	@Override public void exitContain_doors(MapGrammarParser.Contain_doorsContext ctx) { }
 
 	@Override public void enterRoom(MapGrammarParser.RoomContext ctx) { }
 	@Override public void exitRoom(MapGrammarParser.RoomContext ctx) { }

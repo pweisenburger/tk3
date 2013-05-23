@@ -21,13 +21,14 @@ import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.map.grammar.MapGrammarListener;
 import tk3.labyrinth.map.grammar.MapGrammarParser.ActivateContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.ButtonContext;
-import tk3.labyrinth.map.grammar.MapGrammarParser.Contain_buttonsContext;
-import tk3.labyrinth.map.grammar.MapGrammarParser.Contain_doorsContext;
+import tk3.labyrinth.map.grammar.MapGrammarParser.ButtonsContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.DoorContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.Door_goalContext;
+import tk3.labyrinth.map.grammar.MapGrammarParser.DoorsContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.FieldContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.FinishContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.IdContext;
+import tk3.labyrinth.map.grammar.MapGrammarParser.ListContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.Max_playerContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.NameContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.RoomContext;
@@ -36,9 +37,9 @@ import tk3.labyrinth.map.grammar.MapGrammarParser.StartContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.TypeContext;
 
 public class MapListener implements MapGrammarListener {
-	
+
 	private static final long seed = 1;
-	
+
 	private Random random = new Random(seed);
 
 	private Field field;
@@ -52,8 +53,10 @@ public class MapListener implements MapGrammarListener {
 	private List<Door> currentDoors = new ArrayList<>();
 
 	private List<GameElement> currentAddtional = new ArrayList<>();
-	
+
 	private int maxPlayer = -1;
+
+	private List<String> ids = new ArrayList<>();
 
 	public Field getResult() {
 		return field;
@@ -111,7 +114,7 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void enterMax_player(Max_playerContext ctx) {
-		
+
 	}
 
 	@Override
@@ -145,16 +148,17 @@ public class MapListener implements MapGrammarListener {
 	}
 
 	@Override
-	public void enterContain_buttons(Contain_buttonsContext ctx) {
-		currentAddtional.clear();
-		for (TerminalNode id : ctx.STRING()) {
-			currentAddtional.add(idToButton.get(id.getText()));
-		}
+	public void enterButtons(ButtonsContext ctx) {
+		ids.clear();
 	}
 
 	@Override
-	public void exitContain_buttons(Contain_buttonsContext ctx) {
-
+	public void exitButtons(ButtonsContext ctx) {
+		for (String id : ids) {
+			if (idToDoor.get(id) != null) {
+				currentAddtional.add(idToButton.get(id));
+			}
+		}
 	}
 
 	@Override
@@ -174,21 +178,22 @@ public class MapListener implements MapGrammarListener {
 	}
 
 	@Override
-	public void enterContain_doors(Contain_doorsContext ctx) {
-		
+	public void enterDoors(DoorsContext ctx) {
+		ids.clear();
 	}
 
 	@Override
-	public void exitContain_doors(Contain_doorsContext ctx) {
-		currentDoors.clear();
-		for (TerminalNode id : ctx.STRING()) {
-			currentDoors.add(idToDoor.get(id.getText()));
+	public void exitDoors(DoorsContext ctx) {
+		for (String id : ids) {
+			if (idToDoor.get(id) != null) {
+				currentDoors.add(idToDoor.get(id));
+			}
 		}
 	}
 
 	@Override
 	public void enterType(TypeContext ctx) {
-		
+
 	}
 
 	@Override
@@ -208,7 +213,8 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void enterRoom(RoomContext ctx) {
-		
+		currentAddtional.clear();
+		currentDoors.clear();
 	}
 
 	@Override
@@ -217,12 +223,12 @@ public class MapListener implements MapGrammarListener {
 		GameElement[][] elementMatrix = createRoom();
 		placeDoors(elementMatrix, currentDoors);
 		placeElements(elementMatrix, currentAddtional);
-		
-		 Room room = new Room(elementMatrix);
-		 room.setId(name);
-//		 room.setMaxPlayer(maxPlayer);
-		 idToRoom.put(name, room);
-		 maxPlayer = -1;
+
+		Room room = new Room(elementMatrix);
+		room.setId(name);
+		// room.setMaxPlayer(maxPlayer);
+		idToRoom.put(name, room);
+		maxPlayer = -1;
 	}
 
 	@Override
@@ -236,17 +242,17 @@ public class MapListener implements MapGrammarListener {
 	}
 
 	private GameElement[][] createRoom() {
-		int x = 2 + currentDoors.size();
-		int y = 2 + currentAddtional.size();
+		int x = 4 + currentDoors.size();
+		int y = 4 + currentAddtional.size();
 
 		GameElement[][] elementMatrix = new GameElement[x][y];
 		for (int i = 0; i < x; i++) {
 			elementMatrix[i][0] = new Wall();
-			elementMatrix[i][y-1] = new Wall();
+			elementMatrix[i][y - 1] = new Wall();
 		}
-		for (int i = 0; i < y; i++) {
+		for (int i = 1; i < y -1; i++) {
 			elementMatrix[0][i] = new Wall();
-			elementMatrix[x-1][i] = new Wall();
+			elementMatrix[x - 1][i] = new Wall();
 		}
 		return elementMatrix;
 	}
@@ -259,12 +265,12 @@ public class MapListener implements MapGrammarListener {
 			do {
 				if (random.nextBoolean()) {
 					x = random.nextBoolean() ? 0 : elementMatrix.length - 1;
-					y = random.nextInt(elementMatrix[0].length - 1);
+					y = 1 + random.nextInt(elementMatrix[0].length - 3);
 				} else {
-					x = random.nextInt(elementMatrix.length - 1);
+					x = random.nextInt(elementMatrix.length - 3);
 					y = random.nextBoolean() ? 0 : elementMatrix[0].length - 1;
 				}
-			} while (!Door.class.isInstance(elementMatrix[x][y]));
+			} while (Door.class.isInstance(elementMatrix[x][y]));
 			elementMatrix[x][y] = door;
 		}
 	}
@@ -284,21 +290,33 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void enterFinish(FinishContext ctx) {
-		currentAddtional.add(new Finish());
+
 	}
 
 	@Override
 	public void exitFinish(FinishContext ctx) {
-
+		currentAddtional.add(new Finish());
 	}
 
 	@Override
 	public void enterStart(StartContext ctx) {
-		currentAddtional.add(new Start());
+
 	}
 
 	@Override
 	public void exitStart(StartContext ctx) {
+		currentAddtional.add(new Start());
+	}
 
+	@Override
+	public void enterList(ListContext ctx) {
+
+	}
+
+	@Override
+	public void exitList(ListContext ctx) {
+		for (int i = 0; i < ctx.getChildCount(); i++) {
+			ids.add(ctx.getChild(i).getText());
+		}
 	}
 }

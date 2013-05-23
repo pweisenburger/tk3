@@ -18,6 +18,7 @@ public class MapReader {
 		MapGrammarParser parser = new MapGrammarParser(tokens);
 		MapListener listener = new MapListener();
 		parser.addParseListener(listener);
+		parser.setBuildParseTree(true); 
 		parser.field();
 		return listener.getResult();
 	}

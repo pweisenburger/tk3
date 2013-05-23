@@ -5,8 +5,17 @@
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 public interface MapGrammarListener extends ParseTreeListener {
+	void enterDoors(MapGrammarParser.DoorsContext ctx);
+	void exitDoors(MapGrammarParser.DoorsContext ctx);
+
 	void enterDoor(MapGrammarParser.DoorContext ctx);
 	void exitDoor(MapGrammarParser.DoorContext ctx);
+
+	void enterButtons(MapGrammarParser.ButtonsContext ctx);
+	void exitButtons(MapGrammarParser.ButtonsContext ctx);
+
+	void enterList(MapGrammarParser.ListContext ctx);
+	void exitList(MapGrammarParser.ListContext ctx);
 
 	void enterType(MapGrammarParser.TypeContext ctx);
 	void exitType(MapGrammarParser.TypeContext ctx);
@@ -29,23 +38,17 @@ public interface MapGrammarListener extends ParseTreeListener {
 	void enterFinish(MapGrammarParser.FinishContext ctx);
 	void exitFinish(MapGrammarParser.FinishContext ctx);
 
+	void enterStart(MapGrammarParser.StartContext ctx);
+	void exitStart(MapGrammarParser.StartContext ctx);
+
 	void enterButton(MapGrammarParser.ButtonContext ctx);
 	void exitButton(MapGrammarParser.ButtonContext ctx);
 
 	void enterRoom_attr(MapGrammarParser.Room_attrContext ctx);
 	void exitRoom_attr(MapGrammarParser.Room_attrContext ctx);
 
-	void enterStart(MapGrammarParser.StartContext ctx);
-	void exitStart(MapGrammarParser.StartContext ctx);
-
 	void enterName(MapGrammarParser.NameContext ctx);
 	void exitName(MapGrammarParser.NameContext ctx);
-
-	void enterContain_buttons(MapGrammarParser.Contain_buttonsContext ctx);
-	void exitContain_buttons(MapGrammarParser.Contain_buttonsContext ctx);
-
-	void enterContain_doors(MapGrammarParser.Contain_doorsContext ctx);
-	void exitContain_doors(MapGrammarParser.Contain_doorsContext ctx);
 
 	void enterRoom(MapGrammarParser.RoomContext ctx);
 	void exitRoom(MapGrammarParser.RoomContext ctx);
