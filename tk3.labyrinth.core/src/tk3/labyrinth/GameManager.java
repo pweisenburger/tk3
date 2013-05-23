@@ -5,13 +5,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import tk3.labyrinth.core.gameelements.IActivatable;
+import tk3.labyrinth.core.player.Player;
+import tk3.labyrinth.core.shared.Position;
+
 public class GameManager {
 	private Game game;
 	private List<String> games;
 	private List<GameManagerObserver> observers;
+	private GameObserver gameObserver = new GameObserver() {
+		public void playerRemoved(Player player) {
+			if (player == game.getOwnPlayer())
+				leaveGame();
+		}
+		public void playerMoved(Player player, Position oldPosition) {}
+		public void playerAdded(Player player) { }
+		public void elementActivated(IActivatable ge) { }
+	};
 	
 	public GameManager() {
 		games = new ArrayList<>();
+		observers = new ArrayList<>();
 	}
 	
 	public void addObserver(GameManagerObserver o) {
@@ -40,8 +54,9 @@ public class GameManager {
 			o.gameListChanged(Collections.unmodifiableList(games));
 	}
 	
-	void startNewGame(Game game) {
-		this.game = game;		
+	public void startNewGame(Game game) {
+		this.game = game;	
+		this.game.addObserver(gameObserver);
 		for (GameManagerObserver o : observers)
 			o.newGameStarted(game);
 	}
@@ -53,7 +68,17 @@ public class GameManager {
 	
 	public void joinGame(Game game) {
 		this.game = game;
+		this.game.addObserver(gameObserver);
 		for (GameManagerObserver o : observers)
 			o.gameJoined(game);
+	}
+	
+	public void leaveGame() {
+		if (game != null) {
+			game.removeObserver(gameObserver);
+			for (GameManagerObserver o : observers)
+				o.gameLeft(game);
+		}
+		game = null;
 	}
 }

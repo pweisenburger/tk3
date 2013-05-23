@@ -54,6 +54,18 @@ public class God implements GameObserver {
 			gameConnection.send(msg);
 		}
 	}
+
+	@Override
+	public void playerAdded(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerRemoved(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

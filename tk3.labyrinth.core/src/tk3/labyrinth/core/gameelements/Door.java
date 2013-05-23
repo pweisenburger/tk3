@@ -18,11 +18,13 @@ public class Door extends GameElement implements IActivatable {
 	@Override
 	public void activate(GameElement ge) {
 		active = true;
+		door.active = true;
 	}
 	
 	@Override
 	public void deactivate(GameElement ge) {
 		active = false;
+		door.active = false;
 	}
 	
 	@Override
