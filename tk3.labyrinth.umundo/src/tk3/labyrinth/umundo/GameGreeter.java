@@ -2,6 +2,8 @@ package tk3.labyrinth.umundo;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.umundo.core.Greeter;
 import org.umundo.core.Message;
 import org.umundo.core.Publisher;
@@ -10,6 +12,8 @@ import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.map.MapFacade;
 
 public class GameGreeter extends Greeter {
+	
+	private static Logger logger = LoggerFactory.getLogger(GameGreeter.class);
 	
 	private UmundoManager manager;
 	
@@ -37,13 +41,9 @@ public class GameGreeter extends Greeter {
 				}
 				msg = MessageFactory.createMapInfoMessageToSubscriber(subId, ownPlayer.getId(), mapName, mapDescription);
 				pub.send(msg);
-				
-				System.out.println("SENDE MAP_INFO");
 			
-				msg = MessageFactory.createPlayerPositionMessageToSubscriber(subId, ownPlayer.getId(), ownPlayer.getPosition());
+				msg = MessageFactory.createPlayerPositionMessageToSubscriber(subId, ownPlayer.getId(), manager.getGameConnection().getSubscriberUUID(), ownPlayer.getPosition());
 				pub.send(msg);
-				
-				System.out.println("SENDE PLAYER_POSITION_MESSAGE");
 			}
 		}		
 	}
@@ -51,6 +51,9 @@ public class GameGreeter extends Greeter {
 	@Override
 	public void farewell(Publisher arg0, String nodeId, String subId) {
 		String playerId = manager.getSubIDToPlayerIDMap().get(subId);
+		
+		logger.debug("FAREWELL  es geht={} ich={}", playerId, manager.getPlayerId());
+		
 		if (playerId != null) {
 			Player player = manager.getGame().getPlayer(playerId);
 			manager.getGame().removePlayer(player);
