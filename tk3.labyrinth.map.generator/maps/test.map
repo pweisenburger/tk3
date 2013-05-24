@@ -1,5 +1,0 @@
-field name=test1
-door id=1 goal=2
-door id=2 goal=1
-button id=1 activate=1
-room name=1 type=start doors=1

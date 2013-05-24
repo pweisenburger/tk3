@@ -21,7 +21,7 @@ doors : 'doors='list ;
 buttons : 'buttons='list ;
 list : STRING (',' STRING)* ;
 room_attr : type | max_player ;
-type : TYPE'='start|finish ;
+type : TYPE'=' (start | finish) ;
 start : START ;
 finish : FINISH ;
 max_player : MAXIMUM'='N ;
