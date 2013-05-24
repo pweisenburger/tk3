@@ -51,6 +51,14 @@ public class MessageFactory {
 		return msg;
 	}
 	
+	public static Message createGameInfoMessageToSubscriber(String subscriberSubID, String senderID, String gameID) {
+		Message msg = Message.toSubscriber(subscriberSubID);
+		msg.putMeta(KEY_TYPE, MSG_GAME_INFO);
+		msg.putMeta(KEY_SENDER_ID, senderID);
+		msg.putMeta(KEY_GAME_ID, gameID);
+		return msg;
+	}
+	
 	public static Message createPlayerPositionMessage(String senderID, Position position) {
 		Message msg = new Message();
 		msg.putMeta(KEY_TYPE, MSG_PLAYER_POSITION);

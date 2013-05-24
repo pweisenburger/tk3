@@ -41,6 +41,10 @@ public class God implements GameObserver, GameManagerObserver {
 		return gameManager;
 	}
 	
+	public Game getGame() {
+		return game;
+	}
+	
 	// 
 	public void movePlayer(String id, Position position) {
 		game.getPlayer(id).move(position);
@@ -80,7 +84,7 @@ public class God implements GameObserver, GameManagerObserver {
 	@Override
 	public void newGameStarted(Game game) {
 		this.game = game;
-		gameConnection = new Connection(node, game.getId(), new GameGreeter(this), new GameReceiver(this));
+		gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
 		
 		//auf main nachricht verschicken, dass wir ein neues Spiel gestartet haben
 		Message msg = MessageFactory.createGameInfoMessage(game.getOwnPlayer().getId(), game.getId());
@@ -92,7 +96,7 @@ public class God implements GameObserver, GameManagerObserver {
 		this.game = game;
 
 		if(gameConnection == null) {
-			gameConnection = new Connection(node, game.getId(), new GameGreeter(this), new GameReceiver(this));
+			gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
 		}
 		
 		//eigene position verschicken --> GREETER
@@ -107,7 +111,7 @@ public class God implements GameObserver, GameManagerObserver {
 
 	@Override
 	public void joinGame(String gameId) {
-		gameConnection = new Connection(node, gameId, new GameGreeter(this), new GameReceiver(this));
+		gameConnection = new Connection(node, PREFIX + gameId, new GameGreeter(this), new GameReceiver(this));
 	}
 
 	@Override
