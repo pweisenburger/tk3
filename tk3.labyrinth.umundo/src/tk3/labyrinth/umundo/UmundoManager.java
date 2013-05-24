@@ -28,6 +28,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	
 	public UmundoManager(GameManager gameManager) {
 		this.gameManager = gameManager;
+		this.node = new Node();
 		
 		MainGreeter mainGreeter = new MainGreeter(this);
 		MainReceiver mainReceiver = new MainReceiver(this);

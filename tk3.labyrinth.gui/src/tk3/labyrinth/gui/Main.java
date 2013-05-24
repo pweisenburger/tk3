@@ -13,11 +13,14 @@ import tk3.labyrinth.core.gamefield.Field;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
+import tk3.labyrinth.umundo.UmundoManager;
 
 public class Main {
 	public static void main(String[] args) {
 		//TODO:setDefaultCloseOperation  just testing
-		new GameFrame(new GameManager()).setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
+		GameManager manager = new GameManager();
+		new UmundoManager(manager);
+		new GameFrame(manager).setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
 	}
 	
 	public static Game testGame() {
