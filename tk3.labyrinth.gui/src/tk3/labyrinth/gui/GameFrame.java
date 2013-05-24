@@ -58,7 +58,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		gameList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				gameManager.joinGame(item, playerName);
+				gameManager.joinGame(item, playerName = getInputText());
 			}
 			
 			protected void buttonClicked() {
