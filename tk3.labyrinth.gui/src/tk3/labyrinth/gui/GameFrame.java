@@ -5,7 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -19,9 +21,15 @@ import javax.swing.Timer;
 import tk3.labyrinth.Game;
 import tk3.labyrinth.GameManager;
 import tk3.labyrinth.GameManagerObserver;
+import tk3.labyrinth.core.gamefield.Field;
+import tk3.labyrinth.core.player.Player;
+import tk3.labyrinth.core.shared.Position;
+import tk3.labyrinth.map.MapFacade;
+import tk3.labyrinth.map.SyntaxException;
 
 @SuppressWarnings("serial")
 public class GameFrame extends JFrame implements ActionListener, GameManagerObserver {
+	private MapFacade mapFacade;
 	private GameManager gameManager;
 	private SpringLayout layout;
 	private BlackPanel blackPanel;
@@ -32,6 +40,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	private String playerName;
 	
 	public GameFrame(GameManager manager) {
+		mapFacade = new MapFacade();
 		gameManager = manager;
 		playerName = System.getProperty("user.name");
 		
@@ -49,7 +58,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		gameList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				gameManager.joinGame(item);
+				gameManager.joinGame(item, playerName = getInputText());
 			}
 			
 			protected void buttonClicked() {
@@ -64,7 +73,17 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		mapList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				gameManager.startNewGame(Main.testGame(getInputText(), playerName));
+				try {
+					Field field = mapFacade.getMap(item);
+					Player player = new Player(playerName, field.getStart().getPosition());
+					Game game = new Game(getInputText(), field, Arrays.asList(player));
+					game.setOwnPlayer(player);
+					gameManager.startNewGame(game);
+				} catch (IOException | SyntaxException e) {
+					e.printStackTrace();
+				}
+				
+				// gameManager.startNewGame(Main.testGame(getInputText(), playerName));
 			}
 			
 			protected void buttonClicked() {
@@ -74,8 +93,11 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		mapList.setInputDesc("Game name: ");
 		mapList.setButtonText("Back");
 		
-		//TODO: set map list
-		mapList.setList(java.util.Collections.singletonList("(test map)"), true);
+		List<String> maps = mapFacade.getMapList();
+		if (maps.isEmpty())
+			mapList.setList(Collections.singletonList("(no maps)"), false);
+		else
+			mapList.setList(maps, true);
 		
 		layout.putConstraint(SpringLayout.HEIGHT, blackPanel, 0,
 				             SpringLayout.HEIGHT, getContentPane());
@@ -107,7 +129,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	}
 	
 	@Override
-	public void joinGame(String gameId) {
+	public void joinGame(String gameId, String playerId) {
 		//
 	}
 	
