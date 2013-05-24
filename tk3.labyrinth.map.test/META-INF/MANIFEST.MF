@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Name: Test to read maps
+Bundle-SymbolicName: tk3.labyrinth.map.test
+Bundle-Version: 0.1
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Provide-Package: tk3.labyrinth.core.shared
+Require-Bundle: org.antl;bundle-version="4.0.7",
+ tk3.labyrinth.core;bundle-version="0.1.0",
+ tk3.labyrinth.map;bundle-version="0.1.0",
+ org.junit;bundle-version="4.10.0"

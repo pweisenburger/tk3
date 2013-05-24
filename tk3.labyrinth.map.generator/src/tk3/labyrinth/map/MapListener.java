@@ -219,7 +219,7 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void exitRoom(RoomContext ctx) {
-		String name = ctx.name().getText();
+		String name = ctx.name().STRING().getText();
 		GameElement[][] elementMatrix = createRoom();
 		placeDoors(elementMatrix, currentDoors);
 		placeElements(elementMatrix, currentAddtional);
