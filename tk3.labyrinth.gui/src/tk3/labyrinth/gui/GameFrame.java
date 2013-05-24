@@ -82,8 +82,6 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 				} catch (IOException | SyntaxException e) {
 					e.printStackTrace();
 				}
-				
-				// gameManager.startNewGame(Main.testGame(getInputText(), playerName));
 			}
 			
 			protected void buttonClicked() {

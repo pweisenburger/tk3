@@ -65,7 +65,6 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	private Timer roomAnimation;
 	private Timer playerAnimation;
 	private Timer messageTimer;
-	private Timer testTimer;
 	
 	static final private int elementSize = 16;
 	
@@ -109,12 +108,6 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		messages = new ArrayList<>();
 		messagesTimestamp = new ArrayList<>();
 		addMessage("You joined " + game.getId() + " as " + ownPlayer.getId());
-		
-		//TODO: just testing
-		{
-			testTimer = new Timer(700, this);
-			testTimer.start();
-		}
 	}
 	
 	private void addMessage(String message) {
@@ -130,18 +123,6 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		//TODO: just testing
-		{
-			if (event.getSource() == testTimer) {
-				Player player = game.getPlayer("other");
-				if (player != null)
-					player.move(new Position(
-									player.getPosition().getRoom(),
-									player.getPosition().getX() == 1 ? 2 : 1,
-									player.getPosition().getY()));
-			}
-		}
-		
 		// old message removal
 		if (event.getSource() == messageTimer) {
 			boolean change = false;
@@ -289,7 +270,9 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 							y < 0 || y >= newPos.getRoom().getHeight())
 						newPos = door.getDoor().getPosition();
 				}
-				ownPlayer.move(newPos);
+				
+				if (ownPlayer.move(newPos) == 2)
+					addMessage("Room " + newPos.getRoom().getId() + " is full");
 			}
 		}
 		super.processKeyEvent(event);

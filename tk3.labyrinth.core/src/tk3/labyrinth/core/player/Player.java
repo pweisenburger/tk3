@@ -22,11 +22,26 @@ public class Player {
 		this.game = game;
 	}
 	
-	public boolean move(Position position) {
+	// returns 0, if the move was performed
+	//         1, if the position is not traversable
+	//         2, if the player could not enter the room due to max player limit
+	public int move(Position position) {
 		// validate new position
 		GameElement ge = position.getRoom().getGameElement(position.getX(), position.getY());
 		if (ge != null && !ge.isTraversable())
-			return false;
+			return 1;
+		
+		// check room player limit
+		if (this.position.getRoom() != position.getRoom()) {
+			int maxPlayer = position.getRoom().getMaxPlayer();
+			if (maxPlayer > 0) {
+				for (Player player : game.getPlayers())
+					if (player.getPosition().getRoom() == position.getRoom())
+						maxPlayer--;
+				if (maxPlayer < 1)
+					return 2;
+			}
+		}
 		
 		// inform observers
 		Position oldPosition = this.position;
@@ -71,7 +86,7 @@ public class Player {
 			}
 		}
 		
-		return true;
+		return 0;
 	}
 	
 	public String getId() {
