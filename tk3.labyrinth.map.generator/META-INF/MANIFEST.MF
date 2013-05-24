@@ -5,4 +5,5 @@ Bundle-Version: 0.1
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Provide-Package: tk3.labyrinth.map
 Require-Bundle: org.antl;bundle-version="4.0.7",
- tk3.labyrinth.core;bundle-version="0.1.0"
+ tk3.labyrinth.core;bundle-version="0.1.0",
+ ch.qos.logkback;bundle-version="1.0.13"
