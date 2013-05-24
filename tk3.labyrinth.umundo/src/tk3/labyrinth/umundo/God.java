@@ -1,41 +1,51 @@
 package tk3.labyrinth.umundo;
 
+import java.util.Set;
+
 import org.umundo.core.Message;
 import org.umundo.core.Node;
 
 import tk3.labyrinth.Game;
+import tk3.labyrinth.GameManager;
+import tk3.labyrinth.GameManagerObserver;
 import tk3.labyrinth.GameObserver;
 import tk3.labyrinth.core.gameelements.GameElement;
 import tk3.labyrinth.core.gameelements.IActivatable;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
 
-public class God implements GameObserver {
+public class God implements GameObserver, GameManagerObserver {
 	
 	public final static String PREFIX = "tk3.labyrinth.";
 	
 	private Node node;
-	private Game game;
+	private GameManager gameManager;
+	private Game game; //<-- brauchen wir das hier?
 	
 	private Connection mainConnection;
 	private Connection gameConnection;
 	
 	
-	public God(Game game) {
-		this.game = game;
+	public God(GameManager gameManager) {
+		this.gameManager = gameManager;
 		
-		MainGreeter mainGreeter = new MainGreeter();
-		MainReceiver mainReceiver = new MainReceiver();
+		MainGreeter mainGreeter = new MainGreeter(this);
+		MainReceiver mainReceiver = new MainReceiver(this);
 		String mainID = PREFIX + "main";
 		mainConnection = new Connection(node, mainID, mainGreeter, mainReceiver);
 		
 		gameConnection = null;
 	}
 	
+	public GameManager getGameManager() {
+		return gameManager;
+	}
+	
 	// 
 	public void movePlayer(String id, Position position) {
 		game.getPlayer(id).move(position);
 	}
+	
 	
 	
 	// Umundo Schicht wird informiert, dass sich etwas im Spiel getan hat: 
@@ -57,14 +67,52 @@ public class God implements GameObserver {
 
 	@Override
 	public void playerAdded(Player player) {
-		// TODO Auto-generated method stub
+		// TODO: hier wirklich nichts tun?	
 		
 	}
 
 	@Override
 	public void playerRemoved(Player player) {
-		// TODO Auto-generated method stub
+		// TODO: hier wirklich nichts tun?	
 		
+	}
+
+	@Override
+	public void newGameStarted(Game game) {
+		this.game = game;
+		gameConnection = new Connection(node, game.getId(), new GameGreeter(this), new GameReceiver(this));
+		
+		//auf main nachricht verschicken, dass wir ein neues Spiel gestartet haben
+		Message msg = MessageFactory.createGameInfoMessage(game.getOwnPlayer().getId(), game.getId());
+		mainConnection.send(msg);
+	}
+
+	@Override
+	public void gameJoined(Game game) {
+		this.game = game;
+
+		if(gameConnection == null) {
+			gameConnection = new Connection(node, game.getId(), new GameGreeter(this), new GameReceiver(this));
+		}
+		
+		//eigene position verschicken --> GREETER
+	}
+
+	@Override
+	public void gameLeft(Game game) {
+		gameConnection.close();
+		gameConnection = null;
+		this.game = null;
+	}
+
+	@Override
+	public void joinGame(String gameId) {
+		gameConnection = new Connection(node, gameId, new GameGreeter(this), new GameReceiver(this));
+	}
+
+	@Override
+	public void gameListChanged(Set<String> gameList) {
+		// TODO: hier wirklich nichts tun?		
 	}
 	
 	

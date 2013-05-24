@@ -5,6 +5,12 @@ import org.umundo.core.Publisher;
 
 public class GameGreeter extends Greeter {
 	
+	private God manager;
+	
+	public GameGreeter(God manager) {
+		this.manager = manager;
+	}
+	
 	@Override
 	public void welcome(Publisher arg0, String nodeId, String subId) {
 		// TODO Auto-generated method stub

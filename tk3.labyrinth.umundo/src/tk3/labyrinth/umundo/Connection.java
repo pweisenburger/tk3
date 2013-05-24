@@ -36,5 +36,9 @@ public class Connection {
 		node.removePublisher(publisher);
 		node.removeSubscriber(subscriber);
 	}
+	
+	public String getId() {
+		return id;
+	}
 
 }

@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -65,7 +67,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		animation = new Timer(20, this);
 		animateTo(gameList);
 		
-		gameListChanged(Collections.<String>emptyList());
+		gameListChanged(Collections.<String>emptySet());
 		gameManager.addObserver(this);
 	}
 	
@@ -90,11 +92,14 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	}
 	
 	@Override
-	public void gameListChanged(List<String> games) {
+	public void gameListChanged(Set<String> games) {
 		if (games.isEmpty())
 			gameList.setList(Collections.singletonList("(no games)"), false);
-		else
-			gameList.setList(games, true);
+		else {
+			List<String> tempList = new ArrayList<String>(games);
+			gameList.setList(tempList, true);
+		}
+			
 	}
 	
 	public void animateTo(JComponent target) {

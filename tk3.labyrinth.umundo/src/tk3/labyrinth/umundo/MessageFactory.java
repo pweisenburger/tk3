@@ -19,6 +19,10 @@ public class MessageFactory {
 	 */
 	public final static String MSG_GET_GAME_INFO ="getgameinfo";
 	
+	public final static String MSG_MAP_INFO = "mapinfo";
+	
+	
+	
 	public final static String MSG_ELEMENT_ACTIVATED = "elementactivated";
 	
 	public final static String KEY_TYPE = "TYPE";
@@ -32,6 +36,10 @@ public class MessageFactory {
 	public final static String KEY_GAME_ID = "GAME_ID";
 	
 	public final static String KEY_SENDER_ID = "SENDER_ID";
+	
+	public final static String KEY_MAP_ID = "MAP_ID";
+	
+	public final static String KEY_MAP_DESCRIPTION = "MAP_DESCRIPTION";
 	
 	public final static String KEY_ACTION = "ACTION";
 
@@ -68,6 +76,15 @@ public class MessageFactory {
 		msg.putMeta(KEY_POS_X, Integer.toString(ge.getPosition().getX()));
 		msg.putMeta(KEY_POS_Y, Integer.toString(ge.getPosition().getY()));
 		msg.putMeta(KEY_ACTION, action);
+		return msg;
+	}
+	
+	public static Message createMapInfoMessage(String senderID, String mapID, String mapDescription) {
+		Message msg = new Message();
+		msg.putMeta(KEY_TYPE, MSG_MAP_INFO);
+		msg.putMeta(KEY_SENDER_ID, senderID);
+		msg.putMeta(KEY_MAP_ID, mapID);
+		msg.putMeta(KEY_MAP_DESCRIPTION, mapDescription);
 		return msg;
 	}
 }
