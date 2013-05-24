@@ -141,6 +141,7 @@ public class MapListener implements MapGrammarListener {
 		String activateId = ctx.activate().STRING().getText();
 		idToButton.put(id, new Button());
 		idToButton.get(id).initReferencedElement(idToDoor.get(activateId));
+		idToDoor.get(activateId).setAlwaysOpen(false);
 		logger.debug("button {} activate door {}", id, activateId);
 	}
 
