@@ -61,6 +61,8 @@ public class MapListener implements MapGrammarListener {
 	private int maxPlayer = -1;
 
 	private List<String> ids = new ArrayList<>();
+	
+	private Map<String, String> idDoorToIdGoal = new HashMap<>();
 
 	private Start start = null;
 
@@ -118,6 +120,11 @@ public class MapListener implements MapGrammarListener {
 		String name = ctx.name().STRING().getText();
 		field = new Field(name, idToRoom.values());
 		field.setStart(start);
+		
+		for(String id : idDoorToIdGoal.keySet()) {
+			Door door = idToDoor.get(id);
+			door.initDoor(idToDoor.get(idDoorToIdGoal.get(id)));
+		}
 	}
 
 	@Override
@@ -179,11 +186,8 @@ public class MapListener implements MapGrammarListener {
 		String id = ctx.id().STRING().getText();
 		String goalId = ctx.door_goal().STRING().getText();
 		idToDoor.put(id, new Door());
+		idDoorToIdGoal.put(id, goalId);
 		logger.debug("door {} is associated to door {}", id, goalId);
-		if (idToDoor.containsKey(goalId)) {
-			idToDoor.get(id).initDoor(idToDoor.get(goalId));
-			idToDoor.get(goalId).initDoor(idToDoor.get(id));
-		}
 	}
 
 	@Override
