@@ -34,14 +34,14 @@ public class MapReaderTest {
 		for (Room room : field.getRooms()) {
 			switch (room.getId()) {
 			case "1":
-				assertEquals(5, room.getHeight()); // door
+				assertEquals(6, room.getHeight()); // door
 				assertEquals(6, room.getWidth()); // button, start
 				assertTrue(check(room, Start.class));
 				assertTrue(check(room, Button.class));
 				assertFalse(check(room, Finish.class));
 				break;
 			case "2":
-				assertEquals(5, room.getHeight()); // door
+				assertEquals(6, room.getHeight()); // door
 				assertEquals(5, room.getWidth()); // button, start
 				assertFalse(check(room, Start.class));
 				assertFalse(check(room, Button.class));
@@ -81,5 +81,11 @@ public class MapReaderTest {
 	public void testReadExpectSyntaxException() throws IOException,
 			SyntaxException {
 		reader.readMapFromFile("testdata" + File.separator + "testNotValid.map");
+	}
+
+	@Test
+	public void validate() throws IOException, SyntaxException {
+	 reader.readMapFromFile("testdata" + File.separator
+				+ "snake.map");
 	}
 }

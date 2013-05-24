@@ -1,0 +1,21 @@
+field name=snake
+door id=1 goal=2 
+door id=2 goal=1 
+door id=3 goal=4
+door id=4 goal=3
+door id=5 goal=6
+door id=6 goal=5
+door id=7 goal=8
+door id=8 goal=7
+door id=9 goal=0
+door id=0 goal=9
+button id=1 activate=1
+button id=2 activate=3
+button id=3 activate=5
+button id=4 activate=7
+button id=5 activate=9
+room name=1 type=start doors=1,0 buttons=1
+room name=2 max=2 doors=2,3 buttons=2
+room name=3 doors=4,5 buttons=3
+room name=4 doors=6,7 buttons=4
+room name=5 type=finish doors=8,9 buttons=5

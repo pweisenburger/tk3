@@ -9,6 +9,8 @@ import java.util.Random;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
@@ -37,6 +39,8 @@ import tk3.labyrinth.map.grammar.MapGrammarParser.StartContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.TypeContext;
 
 public class MapListener implements MapGrammarListener {
+	
+	private static Logger logger = LoggerFactory.getLogger(MapListener.class);
 
 	private static final long seed = 1;
 
@@ -123,7 +127,7 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void exitMax_player(Max_playerContext ctx) {
-		maxPlayer = Integer.parseInt(ctx.N().getText());
+		maxPlayer = Integer.parseInt(ctx.getText().replaceAll("[\\D]", ""));
 	}
 
 	@Override
