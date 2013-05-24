@@ -1,5 +1,6 @@
 package tk3.labyrinth.umundo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,10 +13,14 @@ import tk3.labyrinth.core.gamefield.Field;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
+import tk3.labyrinth.map.MapFacade;
+import tk3.labyrinth.map.SyntaxException;
 
 public class GameReceiver extends Receiver {
 	
 	private UmundoManager manager;
+	
+	private MapFacade mapFacade;
 	
 	public GameReceiver(UmundoManager manager) {
 		this.manager = manager;
@@ -75,12 +80,26 @@ public class GameReceiver extends Receiver {
 	private void dispatchGameInfo(String SenderId, String mapId, String mapDescription) {
 		if(manager.getGame() == null) { //andernfalls haben wir die Karte schon bekommen
 			String gameId = manager.getGameConnection().getId().substring(manager.PREFIX.length());
-			Field field = null; // TODO parser aufrufen
-			Position position = null; // TODO eigene Position bestimmen
+			
+			if (mapFacade == null) mapFacade = new MapFacade();
+			Field field = null;
+			try {
+				field = mapFacade.addMap(mapDescription);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			} catch (SyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+			
+			Position position = field.getStart();
 			Player ownPlayer = new Player("xy", position); // TODO Namen herausfinden
 			
-			Game joinedGame = new Game(gameId, field, new ArrayList<Player>(Arrays.asList(ownPlayer))); //TODO eigenen Spieler festlegen
-			
+			Game joinedGame = new Game(gameId, field, new ArrayList<Player>(Arrays.asList(ownPlayer)));
+			joinedGame.setOwnPlayer(ownPlayer);
 			
 			manager.getGameManager().joinGame(joinedGame);
 			// der Rest wird vom UmundoManager in gameJoined durchgeführt

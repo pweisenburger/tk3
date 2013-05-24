@@ -15,6 +15,7 @@ import tk3.labyrinth.core.gameelements.GameElement;
 import tk3.labyrinth.core.gameelements.IActivatable;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
+import tk3.labyrinth.map.MapFacade;
 
 public class UmundoManager implements GameObserver, GameManagerObserver {
 	
@@ -23,6 +24,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	private Node node;
 	private GameManager gameManager;
 	private Game game; //<-- brauchen wir das hier?
+	private String playerName = null;
 	
 	private Connection mainConnection;
 	private Connection gameConnection;
@@ -139,6 +141,9 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	public void gameLeft(Game game) {
 		gameConnection.close();
 		gameConnection = null;
+		
+		playerName = null;
+		
 		game.removeObserver(this);
 		this.game = null;
 		players.clear();
@@ -151,6 +156,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	@Override
 	public void joinGame(String gameId) {
 		gameConnection = new Connection(node, PREFIX + gameId, new GameGreeter(this), new GameReceiver(this));
+		this.playerName = playerName;
 	}
 
 	@Override
