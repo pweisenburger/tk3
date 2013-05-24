@@ -23,7 +23,6 @@ import tk3.labyrinth.GameManager;
 import tk3.labyrinth.GameManagerObserver;
 import tk3.labyrinth.core.gamefield.Field;
 import tk3.labyrinth.core.player.Player;
-import tk3.labyrinth.core.shared.Position;
 import tk3.labyrinth.map.MapFacade;
 import tk3.labyrinth.map.SyntaxException;
 
@@ -82,8 +81,6 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 				} catch (IOException | SyntaxException e) {
 					e.printStackTrace();
 				}
-				
-				// gameManager.startNewGame(Main.testGame(getInputText(), playerName));
 			}
 			
 			protected void buttonClicked() {

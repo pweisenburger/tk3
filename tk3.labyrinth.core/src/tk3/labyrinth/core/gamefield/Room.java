@@ -8,6 +8,7 @@ public class Room {
 	private GameElement[][] gameElements;
 	private int width;
 	private int height;
+	private int maxPlayer = -1;
 	
 	public Room(GameElement[][] gameElements) {
 		this.gameElements = gameElements;
@@ -46,7 +47,10 @@ public class Room {
 	}
 
 	public void setMaxPlayer(int maxPlayer) {
-		// TODO Auto-generated method stub
-		
+		this.maxPlayer = maxPlayer;
+	}
+	
+	public int getMaxPlayer() {
+		return maxPlayer;
 	}
 }

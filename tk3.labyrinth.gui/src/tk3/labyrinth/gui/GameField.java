@@ -24,6 +24,7 @@ import tk3.labyrinth.Game;
 import tk3.labyrinth.GameObserver;
 import tk3.labyrinth.core.gameelements.Button;
 import tk3.labyrinth.core.gameelements.Door;
+import tk3.labyrinth.core.gameelements.Finish;
 import tk3.labyrinth.core.gameelements.GameElement;
 import tk3.labyrinth.core.gameelements.IActivatable;
 import tk3.labyrinth.core.gameelements.Wall;
@@ -43,6 +44,7 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	private Map<Player, Point> playerMoving;
 	private Map<Player, Color> playerColor;
 	private Player ownPlayer;
+	private boolean finished;
 	
 	private int colorIndex;
 	private Color[] colorList = {
@@ -65,7 +67,6 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	private Timer roomAnimation;
 	private Timer playerAnimation;
 	private Timer messageTimer;
-	private Timer testTimer;
 	
 	static final private int elementSize = 16;
 	
@@ -78,6 +79,7 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		doorEntry = RoomUtil.calculateDoorEntries(game.getField());
 		roomPosition = RoomUtil.calculateRoomPosition(game.getField(), doorEntry);
 		ownPlayer = game.getOwnPlayer();
+		finished = false;
 		
 		roomOpacity = new HashMap<>();
 		for (Room room : game.getField().getRooms())
@@ -109,12 +111,6 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		messages = new ArrayList<>();
 		messagesTimestamp = new ArrayList<>();
 		addMessage("You joined " + game.getId() + " as " + ownPlayer.getId());
-		
-		//TODO: just testing
-		{
-			testTimer = new Timer(700, this);
-			testTimer.start();
-		}
 	}
 	
 	private void addMessage(String message) {
@@ -130,18 +126,6 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		//TODO: just testing
-		{
-			if (event.getSource() == testTimer) {
-				Player player = game.getPlayer("other");
-				if (player != null)
-					player.move(new Position(
-									player.getPosition().getRoom(),
-									player.getPosition().getX() == 1 ? 2 : 1,
-									player.getPosition().getY()));
-			}
-		}
-		
 		// old message removal
 		if (event.getSource() == messageTimer) {
 			boolean change = false;
@@ -172,8 +156,8 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 				}
 				else if (entry.getValue() > 0.0f) {
 					entry.setValue(entry.getValue() - 0.05f);
-					if (entry.getValue() <= 0.1f)
-						entry.setValue(0.1f);
+					if (entry.getValue() <= 0.5f)
+						entry.setValue(0.5f);
 					else
 						change = true;
 				}
@@ -276,7 +260,7 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 					break;
 			}
 			
-			if (newPos != null) {
+			if (!finished && newPos != null) {
 				if (ge instanceof Door) {
 					int x = newPos.getX();
 					int y = newPos.getY();
@@ -289,7 +273,15 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 							y < 0 || y >= newPos.getRoom().getHeight())
 						newPos = door.getDoor().getPosition();
 				}
-				ownPlayer.move(newPos);
+				
+				if (ownPlayer.move(newPos) == 2)
+					addMessage("Room " + newPos.getRoom().getId() + " is full");
+				
+				ge = getGameElement(ownPlayer.getPosition());
+				if (ge instanceof Finish) {
+					addMessage("You have finished the game");
+					finished = true;
+				}
 			}
 		}
 		super.processKeyEvent(event);
@@ -317,7 +309,8 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		for (Room room : game.getField().getRooms()) {
 			Point roomPos = roomPosition.get(room);
 			
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, roomOpacity.get(room)));
+			g.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, roomOpacity.get(room)));
 			
 			for (int y = 0; y < room.getHeight(); y++)
 				for (int x = 0; x < room.getWidth(); x++) {
@@ -330,15 +323,19 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		}
 		
 		// draw players
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-		for (Player player : game.getPlayers())
-			if (player.getPosition().getRoom() == ownPlayer.getPosition().getRoom()){
-				Point roomPos = roomPosition.get(player.getPosition().getRoom());
-				Point pointOffset = playerMoving.get(player);
-				Point point = new Point((roomPos.x + player.getPosition().getX()) * elementSize + pointOffset.x,
-					                    (roomPos.y + player.getPosition().getY()) * elementSize + pointOffset.y);
-				drawPlayer(g, player, point);
-			}
+		for (Player player : game.getPlayers()) {
+			g.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_OVER, roomOpacity.get(player.getPosition().getRoom())));
+			
+			if (player == ownPlayer && finished)
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+			
+			Point roomPos = roomPosition.get(player.getPosition().getRoom());
+			Point pointOffset = playerMoving.get(player);
+			Point point = new Point((roomPos.x + player.getPosition().getX()) * elementSize + pointOffset.x,
+				                    (roomPos.y + player.getPosition().getY()) * elementSize + pointOffset.y);
+			drawPlayer(g, player, point);
+		}
 		
 		Point roomPos = roomPosition.get(ownPlayer.getPosition().getRoom());
 		Point pointOffset = playerMoving.get(ownPlayer);
@@ -347,6 +344,7 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		drawPlayer(g, ownPlayer, point);
 		
 		// draw info messages
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g.translate(-offset.x, -offset.y);
 		g.setColor(Color.WHITE);
 		int i = 0, h = g.getFontMetrics().getHeight();
@@ -363,6 +361,11 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 			g.setColor(Color.LIGHT_GRAY);
 			g.fillRect(p.x, p.y, elementSize, elementSize);
 			g.draw3DRect(p.x, p.y, elementSize, elementSize, true);
+		}
+		
+		if (ge instanceof Finish) {
+			g.setColor(Color.YELLOW);
+			g.draw3DRect(p.x, p.y, elementSize, elementSize, false);
 		}
 		
 		if (ge instanceof Button) {
