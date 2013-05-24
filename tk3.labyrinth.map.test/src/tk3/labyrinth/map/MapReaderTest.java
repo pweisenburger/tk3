@@ -1,12 +1,14 @@
-package tk3.labyrinth.map.test;
+package tk3.labyrinth.map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import tk3.labyrinth.core.gameelements.Button;
@@ -14,8 +16,6 @@ import tk3.labyrinth.core.gameelements.Finish;
 import tk3.labyrinth.core.gameelements.Start;
 import tk3.labyrinth.core.gamefield.Field;
 import tk3.labyrinth.core.gamefield.Room;
-import tk3.labyrinth.map.MapReader;
-import tk3.labyrinth.map.SyntaxException;
 
 public class MapReaderTest {
 
@@ -28,21 +28,21 @@ public class MapReaderTest {
 
 	@Test
 	public void testReadValidFile() throws IOException, SyntaxException {
-		Field field = reader
-				.readFile("maps" + File.separator + "testValid.map");
+		Field field = reader.readMapFromFile("testdata" + File.separator
+				+ "testValid.map");
 		assertEquals(2, field.getRooms().size());
 		for (Room room : field.getRooms()) {
 			switch (room.getId()) {
 			case "1":
-				assertEquals(5, room.getHeight()); //door
-				assertEquals(6, room.getWidth()); //button, start
+				assertEquals(5, room.getHeight()); // door
+				assertEquals(6, room.getWidth()); // button, start
 				assertTrue(check(room, Start.class));
 				assertTrue(check(room, Button.class));
 				assertFalse(check(room, Finish.class));
 				break;
 			case "2":
-				assertEquals(5, room.getHeight()); //door
-				assertEquals(5, room.getWidth()); //button, start
+				assertEquals(5, room.getHeight()); // door
+				assertEquals(5, room.getWidth()); // button, start
 				assertFalse(check(room, Start.class));
 				assertFalse(check(room, Button.class));
 				assertTrue(check(room, Finish.class));
@@ -67,19 +67,19 @@ public class MapReaderTest {
 	@Test
 	public void testReadValidFile2Rooms1ID() throws IOException,
 			SyntaxException {
-		Field field = reader.readFile("maps" + File.separator
+		Field field = reader.readMapFromFile("testdata" + File.separator
 				+ "testValid2Rooms1ID.map");
 		assertEquals(1, field.getRooms().size());
 	}
 
 	@Test(expected = IOException.class)
 	public void testReadExpectIOException() throws IOException, SyntaxException {
-		reader.readFile("maps" + File.separator + "empty.map");
+		reader.readMapFromFile("testdata" + File.separator + "empty.map");
 	}
 
 	@Test(expected = SyntaxException.class)
 	public void testReadExpectSyntaxException() throws IOException,
 			SyntaxException {
-		reader.readFile("maps" + File.separator + "testNotValid.map");
+		reader.readMapFromFile("testdata" + File.separator + "testNotValid.map");
 	}
 }
