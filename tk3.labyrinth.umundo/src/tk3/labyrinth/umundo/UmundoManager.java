@@ -41,6 +41,12 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		gameConnection = null;
 	}
 	
+	public void close() {
+		if(gameConnection != null) gameConnection.close();
+		mainConnection.close();
+		node.delete();
+	}
+	
 	public GameManager getGameManager() {
 		return gameManager;
 	}
