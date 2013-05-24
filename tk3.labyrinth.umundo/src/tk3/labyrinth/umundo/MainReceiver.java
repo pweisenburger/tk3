@@ -8,9 +8,9 @@ import static tk3.labyrinth.umundo.MessageFactory.*;
 
 public class MainReceiver extends Receiver {
 
-	private God manager;
+	private UmundoManager manager;
 	
-	public MainReceiver(God manager) {
+	public MainReceiver(UmundoManager manager) {
 		this.manager = manager;
 	}
 	

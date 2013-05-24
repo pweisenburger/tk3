@@ -8,9 +8,9 @@ import tk3.labyrinth.Game;
 
 public class MainGreeter extends Greeter {
 
-	private God manager;
+	private UmundoManager manager;
 	
-	public MainGreeter(God manager) {
+	public MainGreeter(UmundoManager manager) {
 		this.manager = manager;
 	}
 	

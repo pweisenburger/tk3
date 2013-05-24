@@ -14,7 +14,7 @@ import tk3.labyrinth.core.gameelements.IActivatable;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
 
-public class God implements GameObserver, GameManagerObserver {
+public class UmundoManager implements GameObserver, GameManagerObserver {
 	
 	public final static String PREFIX = "tk3.labyrinth.";
 	
@@ -26,7 +26,7 @@ public class God implements GameObserver, GameManagerObserver {
 	private Connection gameConnection;
 	
 	
-	public God(GameManager gameManager) {
+	public UmundoManager(GameManager gameManager) {
 		this.gameManager = gameManager;
 		
 		MainGreeter mainGreeter = new MainGreeter(this);

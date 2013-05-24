@@ -3,11 +3,14 @@ package tk3.labyrinth.umundo;
 import org.umundo.core.Message;
 import org.umundo.core.Receiver;
 
+import tk3.labyrinth.core.gamefield.Room;
+import tk3.labyrinth.core.shared.Position;
+
 public class GameReceiver extends Receiver {
 	
-	private God manager;
+	private UmundoManager manager;
 	
-	public GameReceiver(God manager) {
+	public GameReceiver(UmundoManager manager) {
 		this.manager = manager;
 	}
 	
@@ -25,17 +28,32 @@ public class GameReceiver extends Receiver {
 						Integer.parseInt(msg.getMeta(MessageFactory.KEY_POS_X)), Integer.parseInt(msg.getMeta(MessageFactory.KEY_POS_Y)));
 			break;
 			
+			
+			
 		default:
 			//not interested
 		}
 	}
 
 	private void dispatchElementActivated(String senderId, String posRoom, int posX, int posY, String action) {
-		
+		//TODO:
+		System.out.println("ELEMENT ACTIVATED: " + senderId + ", " + posRoom + ", " + posX + ", " + posY + ", " + action);
 	}
 	
 	private void dispatchPlayerPosition(String senderId, String posRoom, int posX, int posY) {
+		Room room = null;
 		
+		for(Room r : manager.getGame().getField().getRooms()) {
+			if(r.getId().equals(posRoom)) {
+				room = r;
+			}
+		}
+		
+		if(room == null) {
+			System.err.println("DER RAUM DARF EIGENTLICH NICHT NULL SEIN.");
+		} else {
+			manager.getGame().getPlayer(senderId).move(new Position(room, posX, posY));
+		}
 	}
 	
 }
