@@ -45,6 +45,14 @@ public class God implements GameObserver, GameManagerObserver {
 		return game;
 	}
 	
+	public Connection getMainConnection() {
+		return mainConnection;
+	}
+
+	public Connection getGameConnection() {
+		return gameConnection;
+	}
+
 	// 
 	public void movePlayer(String id, Position position) {
 		game.getPlayer(id).move(position);
