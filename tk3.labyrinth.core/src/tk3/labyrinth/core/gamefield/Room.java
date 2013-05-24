@@ -44,4 +44,9 @@ public class Room {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public void setMaxPlayer(int maxPlayer) {
+		// TODO Auto-generated method stub
+		
+	}
 }
