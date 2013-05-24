@@ -21,13 +21,13 @@ public class Main {
 	public static void main(String[] args) {
 		final GameManager manager = new GameManager();
 		
-		final UmundoManager umundoManager = new UmundoManager(manager);
+//		final UmundoManager umundoManager = new UmundoManager(manager);
 		
 		final GameFrame frame = new GameFrame(manager);
 		frame.setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				umundoManager.close();
+//				umundoManager.close();
 			}
 		});
 	}
@@ -81,7 +81,7 @@ public class Main {
 		room2.setId("Room 2");
 		
 		List<Room> rooms = Arrays.asList(room0, room1, room2);
-
+		
 		Field field = new Field("", rooms);
 		List<Player> players = Arrays.asList(new Player(playerId, new Position(rooms.get(0), 1, 2)), new Player("other", new Position(rooms.get(0), 2, 3)));
 		Game game = new Game(gameId, field, players);

@@ -75,9 +75,9 @@ public class GameManager {
 			o.newGameStarted(game);
 	}
 	
-	public void joinGame(String id) {
+	public void joinGame(String gameId, String playerId) {
 		for (GameManagerObserver o : observers)
-			o.joinGame(id);
+			o.joinGame(gameId, playerId);
 	}
 	
 	public void joinGame(Game game) {
