@@ -28,6 +28,9 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	
 	public UmundoManager(GameManager gameManager) {
 		this.gameManager = gameManager;
+		
+		gameManager.addObserver(this);
+		
 		this.node = new Node();
 		
 		MainGreeter mainGreeter = new MainGreeter(this);
@@ -92,12 +95,16 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 
 	@Override
 	public void newGameStarted(Game game) {
+		
 		this.game = game;
+		
+		game.addObserver(this);
 		gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
 		
 		//auf main nachricht verschicken, dass wir ein neues Spiel gestartet haben
 		Message msg = MessageFactory.createGameInfoMessage(game.getOwnPlayer().getId(), game.getId());
 		mainConnection.send(msg);
+		System.out.println("GESENDET: NEW GAME STARTED auf main");
 	}
 
 	@Override
@@ -115,6 +122,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	public void gameLeft(Game game) {
 		gameConnection.close();
 		gameConnection = null;
+		game.removeObserver(this);
 		this.game = null;
 	}
 

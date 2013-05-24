@@ -24,10 +24,12 @@ public class MainReceiver extends Receiver {
 			manager.getMainConnection().send(answer);
 			break;
 		case MSG_GAME_INFO:
-			manager.getGameManager().addGame(msg.getMeta(KEY_GAME_ID));
+			String gameId = msg.getMeta(KEY_GAME_ID);
+			System.out.println("EMPFANGEN: GAME INFO " + gameId);
+			manager.getGameManager().addGame(gameId);
 			break;
 		}
-		super.receive(msg);
+		//super.receive(msg);
 	}
 	
 }

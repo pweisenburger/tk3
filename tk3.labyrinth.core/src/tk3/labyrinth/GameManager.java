@@ -60,6 +60,7 @@ public class GameManager {
 	
 	public void addGame(String gameId) {
 		if(!games.contains(gameId)) {
+			games.add(gameId);
 			for (GameManagerObserver o : observers){
 				//o.gameListChanged(Collections.unmodifiableList(games));
 				o.gameListChanged(Collections.unmodifiableSet(games));
