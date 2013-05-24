@@ -75,9 +75,9 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 			protected void listItemClicked(String item) {
 				try {
 					Field field = mapFacade.getMap(item);
-					List<Player> players = Arrays.asList(new Player(playerName, new Position(field.getRooms().iterator().next(), 1, 1))); 
-					Game game = new Game(getInputText(), field, players);
-					game.setOwnPlayer(players.get(0));
+					Player player = new Player(playerName, field.getStart().getPosition());
+					Game game = new Game(getInputText(), field, Arrays.asList(player));
+					game.setOwnPlayer(player);
 					gameManager.startNewGame(game);
 				} catch (IOException | SyntaxException e) {
 					e.printStackTrace();
