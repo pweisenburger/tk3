@@ -21,17 +21,13 @@ public class Main {
 	public static void main(String[] args) {
 		final GameManager manager = new GameManager();
 		
-//		final UmundoManager umundoManager = new UmundoManager(manager);
+		final UmundoManager umundoManager = new UmundoManager(manager);
 		
 		final GameFrame frame = new GameFrame(manager);
 		frame.setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-<<<<<<< HEAD
-//				umundoManager.close();
-=======
 				umundoManager.close();
->>>>>>> d50cbccedd331220087c317805ef2545ab86244f
 			}
 		});
 	}
