@@ -28,7 +28,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	
 	public UmundoManager(GameManager gameManager) {
 		this.gameManager = gameManager;
-		
+
 		gameManager.addObserver(this);
 		
 		this.node = new Node();
@@ -68,7 +68,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	@Override
 	public void elementActivated(IActivatable ge) {
 		if (ge instanceof GameElement) {
-			Message msg = MessageFactory.createElementActivatedMessage(game.getOwnPlayer().getId(), (GameElement) ge, null); //TODO: action=null!?
+			Message msg = MessageFactory.createElementActivatedMessage(game.getOwnPlayer().getId(), (GameElement) ge, ""); //TODO: action=null!?
 			gameConnection.send(msg);
 		}
 	}
@@ -97,7 +97,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	public void newGameStarted(Game game) {
 		
 		this.game = game;
-		
+
 		game.addObserver(this);
 		gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
 		
@@ -110,6 +110,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	@Override
 	public void gameJoined(Game game) {
 		this.game = game;
+		game.addObserver(this);
 
 		if(gameConnection == null) {
 			gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));

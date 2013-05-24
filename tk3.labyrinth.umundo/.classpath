@@ -3,6 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/nethome/fire01/disc05/users1/yz17ipit/umundo/share/umundo/java/umundo.jar"/>
+	<classpathentry kind="lib" path="/home/yz17ipit/Desktop/umundocore-0.3.4-pre1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

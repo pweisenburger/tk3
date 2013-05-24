@@ -21,6 +21,7 @@ public class MainGreeter extends Greeter {
 		if(game != null) {
 			Message msg = MessageFactory.createGameInfoMessageToSubscriber(subId, game.getOwnPlayer().getId(), game.getId());
 			pub.send(msg);
+			System.out.println("Sende GameInfoMessage");
 		}
 	}
 	
