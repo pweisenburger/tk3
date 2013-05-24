@@ -28,7 +28,6 @@ public class Main {
 		frame.setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				System.out.println("ENDE");
 				umundoManager.close();
 			}
 		});

@@ -21,9 +21,9 @@ public class MessageFactory {
 	
 	public final static String MSG_MAP_INFO = "mapinfo";
 	
-	
-	
 	public final static String MSG_ELEMENT_ACTIVATED = "elementactivated";
+	
+	
 	
 	public final static String KEY_TYPE = "TYPE";
 	
@@ -36,6 +36,8 @@ public class MessageFactory {
 	public final static String KEY_GAME_ID = "GAME_ID";
 	
 	public final static String KEY_SENDER_ID = "SENDER_ID";
+	
+	public final static String KEY_SENDER_SUBSCRIBER_ID  ="SENDER_SUBSCRIBER_ID";
 	
 	public final static String KEY_MAP_ID = "MAP_ID";
 	
@@ -59,10 +61,11 @@ public class MessageFactory {
 		return msg;
 	}
 	
-	public static Message createPlayerPositionMessage(String senderID, Position position) {
+	public static Message createPlayerPositionMessage(String senderID, String senderSubID, Position position) {
 		Message msg = new Message();
 		msg.putMeta(KEY_TYPE, MSG_PLAYER_POSITION);
 		msg.putMeta(KEY_SENDER_ID, senderID);
+		msg.putMeta(KEY_SENDER_SUBSCRIBER_ID, senderSubID);
 		msg.putMeta(KEY_POS_ROOM, position.getRoom().getId());
 		msg.putMeta(KEY_POS_X, Integer.toString(position.getX()));
 		msg.putMeta(KEY_POS_Y, Integer.toString(position.getY()));

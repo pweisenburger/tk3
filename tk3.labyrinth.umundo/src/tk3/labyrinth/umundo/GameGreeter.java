@@ -30,9 +30,12 @@ public class GameGreeter extends Greeter {
 	
 	@Override
 	public void farewell(Publisher arg0, String nodeId, String subId) {
-		super.farewell(arg0, nodeId, subId);
-		
-		//TODO: hier noch was zu tun?
+		String playerId = manager.getSubIDToPlayerIDMap().get(subId);
+		if (playerId != null) {
+			Player player = manager.getGame().getPlayer(playerId);
+			manager.getGame().removePlayer(player);
+			manager.getSubIDToPlayerIDMap().remove(subId);
+		}
 	}
 	
 

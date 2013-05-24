@@ -41,4 +41,8 @@ public class Connection {
 		return id;
 	}
 
+	public String getSubscriberUUID() {
+		return subscriber.getUUID();
+	}
+
 }
