@@ -1,21 +1,30 @@
 package tk3.labyrinth.umundo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.umundo.core.Message;
 import org.umundo.core.Receiver;
 
 import tk3.labyrinth.Game;
-import tk3.labyrinth.GameManager;
+import tk3.labyrinth.core.gameelements.Start;
 import tk3.labyrinth.core.gamefield.Field;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.core.player.Player;
 import tk3.labyrinth.core.shared.Position;
+import tk3.labyrinth.map.MapFacade;
+import tk3.labyrinth.map.SyntaxException;
 
 public class GameReceiver extends Receiver {
 	
+	private static Logger logger = LoggerFactory.getLogger(GameReceiver.class);
+	
 	private UmundoManager manager;
+	
+	private MapFacade mapFacade;
 	
 	public GameReceiver(UmundoManager manager) {
 		this.manager = manager;
@@ -25,20 +34,17 @@ public class GameReceiver extends Receiver {
 	public void receive(Message msg) {
 		switch(msg.getMeta(MessageFactory.KEY_TYPE)) {
 		case MessageFactory.MSG_ELEMENT_ACTIVATED:
-			System.out.println("EMPFANGEN ELEMENT_ACTIVATED");
 			dispatchElementActivated(msg.getMeta(MessageFactory.KEY_SENDER_ID), msg.getMeta(MessageFactory.KEY_POS_ROOM), 
 						Integer.parseInt(msg.getMeta(MessageFactory.KEY_POS_X)), Integer.parseInt(msg.getMeta(MessageFactory.KEY_POS_Y)),
 						msg.getMeta(MessageFactory.KEY_ACTION));
 			break;
 			
 		case MessageFactory.MSG_PLAYER_POSITION:
-			System.out.println("EMPFANGEN PLAYER_POSITION (von '" + msg.getMeta(MessageFactory.KEY_SENDER_ID) + "')");
 			dispatchPlayerPosition(msg.getMeta(MessageFactory.KEY_SENDER_ID), msg.getMeta(MessageFactory.KEY_SENDER_SUBSCRIBER_ID), msg.getMeta(MessageFactory.KEY_POS_ROOM), 
 						Integer.parseInt(msg.getMeta(MessageFactory.KEY_POS_X)), Integer.parseInt(msg.getMeta(MessageFactory.KEY_POS_Y)));
 			break;
 			
 		case MessageFactory.MSG_MAP_INFO:
-			System.out.println("EMPFANGEN MAP_INFO");
 			dispatchGameInfo(msg.getMeta(MessageFactory.KEY_SENDER_ID), msg.getMeta(MessageFactory.KEY_MAP_ID),
 					msg.getMeta(MessageFactory.KEY_MAP_DESCRIPTION));
 			
@@ -48,12 +54,14 @@ public class GameReceiver extends Receiver {
 	}
 
 	private void dispatchElementActivated(String senderId, String posRoom, int posX, int posY, String action) {
-		//TODO:
-		System.out.println("ELEMENT ACTIVATED: " + senderId + ", " + posRoom + ", " + posX + ", " + posY + ", " + action);
+		//System.out.println("ELEMENT ACTIVATED: " + senderId + ", " + posRoom + ", " + posX + ", " + posY + ", " + action);
 	}
 	
 	private void dispatchPlayerPosition(String senderId, String senderSubId, String posRoom, int posX, int posY) {
 		if(manager.getGame() != null) {
+			
+			logger.debug("PUT: SubId='{}' senderId='{}'", senderSubId, senderId);
+			
 			manager.getSubIDToPlayerIDMap().put(senderSubId, senderId);
 			
 			Room room = null;
@@ -67,20 +75,40 @@ public class GameReceiver extends Receiver {
 			if(room == null) {
 				System.err.println("DER RAUM DARF EIGENTLICH NICHT NULL SEIN.");
 			} else {
-				manager.getGame().getPlayer(senderId).move(new Position(room, posX, posY));
+				Player player = manager.getGame().getPlayer(senderId);
+				Position pos = new Position(room, posX, posY);
+				if(player != null) player.move(pos);
+				else {
+					player = new Player(senderId, pos);
+					manager.getGame().addPlayer(player);
+				}
 			}
 		} //ansonsten warten, bis die Map gekommen ist und das das Spiel angelegt wurde
 	}
 	
 	private void dispatchGameInfo(String SenderId, String mapId, String mapDescription) {
 		if(manager.getGame() == null) { //andernfalls haben wir die Karte schon bekommen
-			String gameId = manager.getGameConnection().getId().substring(manager.PREFIX.length());
-			Field field = null; // TODO parser aufrufen
-			Position position = null; // TODO eigene Position bestimmen
-			Player ownPlayer = new Player("xy", position); // TODO Namen herausfinden
+			String gameId = manager.getGameConnection().getId().substring(UmundoManager.PREFIX.length());
 			
-			Game joinedGame = new Game(gameId, field, new ArrayList<Player>(Arrays.asList(ownPlayer))); //TODO eigenen Spieler festlegen
+			if (mapFacade == null) mapFacade = new MapFacade();
+			Field field = null;
+			try {
+				field = mapFacade.addMap(mapDescription);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			} catch (SyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
 			
+			Start start = field.getStart();
+			Player ownPlayer = new Player(manager.getPlayerId(), start.getPosition());
+			
+			Game joinedGame = new Game(gameId, field, new ArrayList<Player>(Arrays.asList(ownPlayer)));
+			joinedGame.setOwnPlayer(ownPlayer);
 			
 			manager.getGameManager().joinGame(joinedGame);
 			// der Rest wird vom UmundoManager in gameJoined durchgeführt

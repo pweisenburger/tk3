@@ -53,7 +53,6 @@ public class GameManager {
 	public void setGames(Set<String> games) {
 		this.games = games;
 		for (GameManagerObserver o : observers){
-			//o.gameListChanged(Collections.unmodifiableList(games));
 			o.gameListChanged(Collections.unmodifiableSet(games));
 		}
 	}
@@ -62,7 +61,15 @@ public class GameManager {
 		if(!games.contains(gameId)) {
 			games.add(gameId);
 			for (GameManagerObserver o : observers){
-				//o.gameListChanged(Collections.unmodifiableList(games));
+				o.gameListChanged(Collections.unmodifiableSet(games));
+			}
+		}
+	}
+	
+	public void removeGame(String gameId) {
+		if(games.contains(gameId)) {
+			games.remove(gameId);
+			for (GameManagerObserver o : observers){
 				o.gameListChanged(Collections.unmodifiableSet(games));
 			}
 		}
@@ -75,9 +82,9 @@ public class GameManager {
 			o.newGameStarted(game);
 	}
 	
-	public void joinGame(String id) {
+	public void joinGame(String gameId, String playerId) {
 		for (GameManagerObserver o : observers)
-			o.joinGame(id);
+			o.joinGame(gameId, playerId);
 	}
 	
 	public void joinGame(Game game) {

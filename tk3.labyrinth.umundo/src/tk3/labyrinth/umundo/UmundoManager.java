@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.umundo.core.Message;
 import org.umundo.core.Node;
 
@@ -18,11 +20,14 @@ import tk3.labyrinth.core.shared.Position;
 
 public class UmundoManager implements GameObserver, GameManagerObserver {
 	
+	private static Logger logger = LoggerFactory.getLogger(UmundoManager.class);
+	
 	public final static String PREFIX = "tk3.labyrinth.";
 	
 	private Node node;
 	private GameManager gameManager;
 	private Game game; //<-- brauchen wir das hier?
+	private String playerId = null;
 	
 	private Connection mainConnection;
 	private Connection gameConnection;
@@ -73,6 +78,10 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		return players;
 	}
 	
+	public String getPlayerId() {
+		return playerId;
+	}
+	
 	// 
 	public void movePlayer(String id, Position position) {
 		game.getPlayer(id).move(position);
@@ -94,6 +103,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		if(player == game.getOwnPlayer()) {
 			Message msg = MessageFactory.createPlayerPositionMessage(player.getId(), gameConnection.getSubscriberUUID(), player.getPosition());
 			gameConnection.send(msg);
+			logger.debug("SENDE PLAYER_POSITION_MESSAGE {}",player.getPosition().toString());
 		}
 	}
 
@@ -113,6 +123,8 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	public void newGameStarted(Game game) {
 		
 		this.game = game;
+		
+		playerId = game.getOwnPlayer().getId();
 
 		game.addObserver(this);
 		gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
@@ -120,7 +132,6 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		//auf main nachricht verschicken, dass wir ein neues Spiel gestartet haben
 		Message msg = MessageFactory.createGameInfoMessage(game.getOwnPlayer().getId(), game.getId());
 		mainConnection.send(msg);
-		System.out.println("GESENDET: NEW GAME STARTED auf main");
 	}
 
 	@Override
@@ -132,33 +143,45 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 			gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
 		}
 		
-		//eigene position verschicken --> GREETER
+		Message posMsg = MessageFactory.createPlayerPositionMessage(playerId, gameConnection.getSubscriberUUID(), game.getOwnPlayer().getPosition());
+		gameConnection.send(posMsg);
 	}
 
 	@Override
 	public void gameLeft(Game game) {
 		gameConnection.close();
 		gameConnection = null;
+		
+		logger.debug("GAME LEFT: {} ich={}", game.getPlayers().size(), playerId);
+		
+		if (game.getPlayers().isEmpty() ||
+				(game.getPlayers().size() == 1 && game.getPlayers().get(0) == game.getOwnPlayer())) {
+			
+			logger.debug("WIRKLICH");
+			
+			Message msg = MessageFactory.createGameDestroyedMessage(playerId, game.getId());
+			mainConnection.send(msg);
+		}
+		
 		game.removeObserver(this);
 		this.game = null;
 		players.clear();
 		
 		gameManager.setGames(new HashSet<String>());
-		Message getGameInfoMsg = MessageFactory.createGetGameInfoMessage("X"); // TODO: senderId
+		Message getGameInfoMsg = MessageFactory.createGetGameInfoMessage(playerId);
 		mainConnection.send(getGameInfoMsg);
+		
+		playerId = null;
 	}
 
 	@Override
-	public void joinGame(String gameId) {
+	public void joinGame(String gameId, String playerId) {
 		gameConnection = new Connection(node, PREFIX + gameId, new GameGreeter(this), new GameReceiver(this));
+		this.playerId = playerId;
 	}
 
 	@Override
 	public void gameListChanged(Set<String> gameList) {
 		// TODO: hier wirklich nichts tun?		
 	}
-	
-	
-	
-
 }

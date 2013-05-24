@@ -14,6 +14,8 @@ public class MessageFactory {
 	 */
 	public final static String MSG_GAME_INFO = "gameinfo";
 	
+	public final static String MSG_GAME_DESTROYED = "gamedestroyed";
+	
 	/**
 	 * Spieler fragt andere Spieler nach ihren aktuellen Spielen ab, diese antworten mit MSG_GAME_INFO
 	 */
@@ -72,10 +74,11 @@ public class MessageFactory {
 		return msg;
 	}
 	
-	public static Message createPlayerPositionMessageToSubscriber(String subscriberSubID, String senderID, Position position) {
+	public static Message createPlayerPositionMessageToSubscriber(String subscriberSubID, String senderID, String senderSubID, Position position) {
 		Message msg = Message.toSubscriber(subscriberSubID);
 		msg.putMeta(KEY_TYPE, MSG_PLAYER_POSITION);
 		msg.putMeta(KEY_SENDER_ID, senderID);
+		msg.putMeta(KEY_SENDER_SUBSCRIBER_ID, senderSubID);
 		msg.putMeta(KEY_POS_ROOM, position.getRoom().getId());
 		msg.putMeta(KEY_POS_X, Integer.toString(position.getX()));
 		msg.putMeta(KEY_POS_Y, Integer.toString(position.getY()));
@@ -115,6 +118,14 @@ public class MessageFactory {
 		msg.putMeta(KEY_SENDER_ID, senderID);
 		msg.putMeta(KEY_MAP_ID, mapID);
 		msg.putMeta(KEY_MAP_DESCRIPTION, mapDescription);
+		return msg;
+	}
+	
+	public static Message createGameDestroyedMessage(String senderID, String gameID) {
+		Message msg = new Message();
+		msg.putMeta(KEY_TYPE, MSG_GAME_DESTROYED);
+		msg.putMeta(KEY_SENDER_ID, senderID);
+		msg.putMeta(KEY_GAME_ID, gameID);
 		return msg;
 	}
 }
