@@ -275,10 +275,11 @@ public class MapListener implements MapGrammarListener {
 					x = random.nextBoolean() ? 0 : elementMatrix.length - 1;
 					y = 1 + random.nextInt(elementMatrix[0].length - 3);
 				} else {
-					x = random.nextInt(elementMatrix.length - 3);
+					x = 1 + random.nextInt(elementMatrix.length - 3);
 					y = random.nextBoolean() ? 0 : elementMatrix[0].length - 1;
 				}
 			} while (Door.class.isInstance(elementMatrix[x][y]));
+			logger.debug("place door on x={} and y={}", x,y);
 			elementMatrix[x][y] = door;
 		}
 	}
@@ -293,6 +294,7 @@ public class MapListener implements MapGrammarListener {
 				y = random.nextInt(elementMatrix[0].length - 1);
 			} while (x == 0 || y == 0 || elementMatrix[x][y] != null);
 			elementMatrix[x][y] = element;
+			logger.debug("place element on x={} and y={}", x,y);
 		}
 	}
 
