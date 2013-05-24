@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -25,10 +27,13 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	private BlackPanel blackPanel;
 	private Timer animation;
 	private ListInputView gameList;
+	private ListInputView mapList;
 	private JComponent animationTarget;
+	private String playerName;
 	
 	public GameFrame(GameManager manager) {
 		gameManager = manager;
+		playerName = System.getProperty("user.name");
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(new Dimension(640, 480));
@@ -44,16 +49,33 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		gameList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				System.out.println("item clicked");
+				gameManager.joinGame(item);
 			}
 			
 			protected void buttonClicked() {
-				gameManager.startNewGame(Main.testGame());
+				playerName = getInputText();
+				mapList.setInputText(playerName + "'s game");
+				animateTo(mapList);
 			}
 		};
 		gameList.setInputDesc("Player name: ");
-		gameList.setInputText(System.getProperty("user.name"));
+		gameList.setInputText(playerName);
 		gameList.setButtonText("New Game");
+		
+		mapList = new ListInputView() {
+			protected void listItemClicked(String item) {
+				gameManager.startNewGame(Main.testGame(getInputText(), playerName));
+			}
+			
+			protected void buttonClicked() {
+				animateTo(gameList);
+			}
+		};
+		mapList.setInputDesc("Game name: ");
+		mapList.setButtonText("Back");
+		
+		//TODO: set map list
+		mapList.setList(java.util.Collections.singletonList("(test map)"), true);
 		
 		layout.putConstraint(SpringLayout.HEIGHT, blackPanel, 0,
 				             SpringLayout.HEIGHT, getContentPane());
@@ -65,7 +87,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		animation = new Timer(20, this);
 		animateTo(gameList);
 		
-		gameListChanged(Collections.<String>emptyList());
+		gameListChanged(Collections.<String>emptySet());
 		gameManager.addObserver(this);
 	}
 	
@@ -90,11 +112,14 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	}
 	
 	@Override
-	public void gameListChanged(List<String> games) {
+	public void gameListChanged(Set<String> games) {
 		if (games.isEmpty())
 			gameList.setList(Collections.singletonList("(no games)"), false);
-		else
-			gameList.setList(games, true);
+		else {
+			List<String> tempList = new ArrayList<String>(games);
+			gameList.setList(tempList, true);
+		}
+			
 	}
 	
 	public void animateTo(JComponent target) {

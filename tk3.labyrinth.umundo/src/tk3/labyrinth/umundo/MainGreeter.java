@@ -1,20 +1,35 @@
 package tk3.labyrinth.umundo;
 
 import org.umundo.core.Greeter;
+import org.umundo.core.Message;
 import org.umundo.core.Publisher;
+
+import tk3.labyrinth.Game;
 
 public class MainGreeter extends Greeter {
 
+	private UmundoManager manager;
+	
+	public MainGreeter(UmundoManager manager) {
+		this.manager = manager;
+	}
+	
 	@Override
-	public void welcome(Publisher arg0, String nodeId, String subId) {
-		// TODO Auto-generated method stub
-		super.welcome(arg0, nodeId, subId);
+	public void welcome(Publisher pub, String nodeId, String subId) {
+		//wenn ich in einem Spiel drinnen bin, andere informieren in welchem
+		Game game = manager.getGame();
+		if(game != null) {
+			Message msg = MessageFactory.createGameInfoMessageToSubscriber(subId, game.getOwnPlayer().getId(), game.getId());
+			pub.send(msg);
+			System.out.println("Sende GameInfoMessage");
+		}
 	}
 	
 	@Override
 	public void farewell(Publisher arg0, String nodeId, String subId) {
-		// TODO Auto-generated method stub
-		super.farewell(arg0, nodeId, subId);
+//		super.farewell(arg0, nodeId, subId);
+		
+		//TODO: hier noch was zu tun?
 	}
 	
 	

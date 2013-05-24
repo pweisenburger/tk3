@@ -1,11 +1,11 @@
 package tk3.labyrinth;
 
-import java.util.List;
+import java.util.Set;
 
 public interface GameManagerObserver {
 	public void newGameStarted(Game game);
 	public void gameJoined(Game game);
 	public void gameLeft(Game game);
 	public void joinGame(String gameId);
-	public void gameListChanged(List<String> gameList);
+	public void gameListChanged(Set<String> gameList);
 }

@@ -9,7 +9,11 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -31,14 +35,36 @@ import tk3.labyrinth.gui.RoomUtil.DoorEntry;
 @SuppressWarnings("serial")
 public class GameField extends JComponent implements GameObserver, ActionListener {
 	private Game game;
+	private List<String> messages;
+	private List<Long> messagesTimestamp;
 	private Map<Room, Point> roomPosition;
 	private Map<Room, Float> roomOpacity;
 	private Map<Door, DoorEntry> doorEntry;
 	private Map<Player, Point> playerMoving;
+	private Map<Player, Color> playerColor;
 	private Player ownPlayer;
+	
+	private int colorIndex;
+	private Color[] colorList = {
+		brighter(Color.BLUE),
+		brighter(Color.CYAN),
+		brighter(Color.GREEN),
+		brighter(Color.MAGENTA),
+		brighter(Color.ORANGE),
+		brighter(Color.PINK),
+		brighter(Color.YELLOW)
+	};
+	
+	private static Color brighter(Color color) {
+ 	 	return new Color(
+ 	 			Math.min(255, 40 + color.getRed()),
+				Math.min(255, 20 + color.getGreen()),
+				Math.min(255, 50 + color.getBlue())).brighter();
+	}
 	
 	private Timer roomAnimation;
 	private Timer playerAnimation;
+	private Timer messageTimer;
 	private Timer testTimer;
 	
 	static final private int elementSize = 16;
@@ -61,17 +87,45 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		for (Player player : game.getPlayers())
 			playerMoving.put(player, new Point(0, 0));
 		
+		playerColor = new HashMap<>();
+		playerColor.put(ownPlayer, Color.RED);
+		
+		Collections.shuffle(Arrays.asList(colorList));
+		for (Player player : game.getPlayers())
+			if (player != ownPlayer) {
+				playerColor.put(player, colorList[colorIndex]);
+				colorIndex = (colorIndex + 1) % colorList.length;
+			}
+		
 		roomAnimation = new Timer(20, this);
 		roomAnimation.start();
 		
 		playerAnimation = new Timer(20, this);
 		roomAnimation.start();
 		
+		messageTimer = new Timer(20, this);
+		messageTimer.start();
+		
+		messages = new ArrayList<>();
+		messagesTimestamp = new ArrayList<>();
+		addMessage("You joined " + game.getId() + " as " + ownPlayer.getId());
+		
 		//TODO: just testing
 		{
 			testTimer = new Timer(700, this);
 			testTimer.start();
 		}
+	}
+	
+	private void addMessage(String message) {
+		messages.add(message);
+		messagesTimestamp.add(System.currentTimeMillis());
+		if (messages.size() > 8) {
+			messages.remove(0);
+			messagesTimestamp.remove(0);
+		}
+		messageTimer.start();
+		repaint();
 	}
 	
 	@Override
@@ -86,6 +140,23 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 									player.getPosition().getX() == 1 ? 2 : 1,
 									player.getPosition().getY()));
 			}
+		}
+		
+		// old message removal
+		if (event.getSource() == messageTimer) {
+			boolean change = false;
+			for (int i = 0; i < messages.size(); i++)
+				if (System.currentTimeMillis() - messagesTimestamp.get(i) > 5000) {
+					messages.remove(i);
+					messagesTimestamp.remove(i);
+					change = true;
+					i--;
+				}
+			
+			if (change)
+				repaint();
+			if (messages.isEmpty())
+				messageTimer.stop();
 		}
 		
 		// room fade animation
@@ -145,12 +216,17 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	
 	@Override
 	public void playerAdded(Player player) {
-		//
+		if (!playerColor.containsKey(player)) {
+			playerColor.put(player, colorList[colorIndex]);
+			colorIndex = (colorIndex + 1) % colorList.length;
+		}
+		
+		addMessage(player.getId() + " joined the game");
 	}
 	
 	@Override
 	public void playerRemoved(Player player) {
-		//
+		addMessage(player.getId() + " left the game");
 	}
 	
 	@Override
@@ -171,7 +247,8 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	
 	@Override
 	public void elementActivated(IActivatable ge) {
-		//
+		if (ge instanceof GameElement)
+			addMessage(((GameElement) ge).getId() + " activated");
 	}
 	
 	@Override
@@ -268,6 +345,13 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 		Point point = new Point((roomPos.x + ownPlayer.getPosition().getX()) * elementSize + pointOffset.x,
 			                    (roomPos.y + ownPlayer.getPosition().getY()) * elementSize + pointOffset.y);
 		drawPlayer(g, ownPlayer, point);
+		
+		// draw info messages
+		g.translate(-offset.x, -offset.y);
+		g.setColor(Color.WHITE);
+		int i = 0, h = g.getFontMetrics().getHeight();
+		for (String message : messages)
+			g.drawString(message, 10, 10 + h * ++i);
 	}
 	
 	protected GameElement getGameElement(Position position) {
@@ -276,22 +360,25 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	
 	protected void drawGameElement(Graphics g, GameElement ge, Point p) {
 		if (ge instanceof Wall) {
-			g.setColor(Color.WHITE);
+			g.setColor(Color.LIGHT_GRAY);
 			g.fillRect(p.x, p.y, elementSize, elementSize);
+			g.draw3DRect(p.x, p.y, elementSize, elementSize, true);
 		}
 		
 		if (ge instanceof Button) {
-			g.setColor(Color.DARK_GRAY);
+			g.setColor(Color.GRAY);
 			g.fillRect(p.x, p.y, elementSize, elementSize);
+			g.draw3DRect(p.x, p.y, elementSize, elementSize, false);
 		}
 		
 		if (ge instanceof Door) {
-			g.setColor(Color.LIGHT_GRAY);
+			g.setColor(Color.DARK_GRAY);
 			g.fillRect(p.x, p.y, elementSize, elementSize);
 			
 			if (ge.getPosition().getRoom() == ownPlayer.getPosition().getRoom() &&
 					!((Door) ge).isActive()) {
-				g.setColor(Color.WHITE);
+				g.draw3DRect(p.x, p.y, elementSize, elementSize, true);
+				g.setColor(Color.LIGHT_GRAY);
 				g.drawLine(p.x, p.y, p.x + elementSize, p.y + elementSize);
 				g.drawLine(p.x + elementSize, p.y, p.x, p.y + elementSize);
 				g.drawPolygon(
@@ -303,13 +390,13 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	}
 	
 	protected void drawPlayer(Graphics g, Player player, Point p) {
-		if (player == ownPlayer) {
-			g.setColor(Color.RED);
-			g.fillOval(p.x, p.y, elementSize, elementSize);
-		}
-		else {
-			g.setColor(Color.ORANGE);
-			g.fillOval(p.x + 1, p.y + 1, elementSize - 2, elementSize - 2);
+		Color color = playerColor.get(player);
+		if (color != null) {
+			g.setColor(color);
+			if (player == ownPlayer)
+				g.fillOval(p.x, p.y, elementSize, elementSize);
+			else 
+				g.fillOval(p.x + 1, p.y + 1, elementSize - 2, elementSize - 2);
 		}
 	}
 }
