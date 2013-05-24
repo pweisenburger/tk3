@@ -9,6 +9,7 @@ import org.umundo.core.Receiver;
 
 import tk3.labyrinth.Game;
 import tk3.labyrinth.GameManager;
+import tk3.labyrinth.core.gameelements.Start;
 import tk3.labyrinth.core.gamefield.Field;
 import tk3.labyrinth.core.gamefield.Room;
 import tk3.labyrinth.core.player.Player;
@@ -95,8 +96,8 @@ public class GameReceiver extends Receiver {
 				return;
 			}
 			
-			Position position = field.getStart();
-			Player ownPlayer = new Player(manager.getPlayerId(), position);
+			Start start = field.getStart();
+			Player ownPlayer = new Player(manager.getPlayerId(), start.getPosition());
 			
 			Game joinedGame = new Game(gameId, field, new ArrayList<Player>(Arrays.asList(ownPlayer)));
 			joinedGame.setOwnPlayer(ownPlayer);
