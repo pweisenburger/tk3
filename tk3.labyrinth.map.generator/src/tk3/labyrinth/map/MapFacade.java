@@ -2,12 +2,18 @@ package tk3.labyrinth.map;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tk3.labyrinth.core.gamefield.Field;
 
 public class MapFacade {
+	
+	private static Logger logger = LoggerFactory.getLogger(MapFacade.class);
 	
 	private static final String mapExtention = ".map";
 	
@@ -38,11 +44,17 @@ public class MapFacade {
 	}
 	
 	public List<String> getMapList() {
-		return Arrays.asList(new File(rootFolder).list());
+		logger.debug("look for list of maps");
+		List<String> mapList = new ArrayList<>();
+		for(String name : new File(rootFolder).list()) {
+			mapList.add(name.replace(mapExtention, ""));
+		}
+		return mapList;
 	}
 	
 	public Field addMap(String mapAsString) throws IOException, SyntaxException {
 			Field field = reader.readMapFromString(mapAsString);
+			logger.debug("add map {} to map list", field.getName());
 			writer.writeMapToFile(createFile(field.getName()).getAbsolutePath(), mapAsString);
 			return field;
 	}
