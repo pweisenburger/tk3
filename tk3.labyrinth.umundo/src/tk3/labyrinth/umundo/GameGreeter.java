@@ -20,19 +20,30 @@ public class GameGreeter extends Greeter {
 			Message msg;
 			Player ownPlayer = manager.getGame().getOwnPlayer();
 			
-			//msg = MessageFactory.createMapInfoMessageToSubscriber(subId, ownPlayer.getId(), mapID, mapDescription); //TODO
-			//pub.send(msg);
+			if (manager.getGame() != null) {
+				msg = MessageFactory.createMapInfoMessageToSubscriber(subId, ownPlayer.getId(),
+						"XXX", manager.getGame().getField().toString());
+				//TODO mapId, mapDescription
+				pub.send(msg);
+				
+				System.out.println("SENDE MAP_INFO");
 			
-			msg = MessageFactory.createPlayerPositionMessageToSubscriber(subId, ownPlayer.getId(), ownPlayer.getPosition());
-			pub.send(msg);
+				msg = MessageFactory.createPlayerPositionMessageToSubscriber(subId, ownPlayer.getId(), ownPlayer.getPosition());
+				pub.send(msg);
+				
+				System.out.println("SENDE PLAYER_POSITION_MESSAGE");
+			}
 		}		
 	}
 	
 	@Override
 	public void farewell(Publisher arg0, String nodeId, String subId) {
-		super.farewell(arg0, nodeId, subId);
-		
-		//TODO: hier noch was zu tun?
+		String playerId = manager.getSubIDToPlayerIDMap().get(subId);
+		if (playerId != null) {
+			Player player = manager.getGame().getPlayer(playerId);
+			manager.getGame().removePlayer(player);
+			manager.getSubIDToPlayerIDMap().remove(subId);
+		}
 	}
 	
 

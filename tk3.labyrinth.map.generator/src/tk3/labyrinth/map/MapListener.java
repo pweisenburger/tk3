@@ -109,7 +109,8 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void exitField(FieldContext ctx) {
-		field = new Field(idToRoom.values());
+		String name = ctx.name().STRING().getText();
+		field = new Field(name, idToRoom.values());
 	}
 
 	@Override
@@ -226,7 +227,7 @@ public class MapListener implements MapGrammarListener {
 
 		Room room = new Room(elementMatrix);
 		room.setId(name);
-		// room.setMaxPlayer(maxPlayer);
+		room.setMaxPlayer(maxPlayer);
 		idToRoom.put(name, room);
 		maxPlayer = -1;
 	}

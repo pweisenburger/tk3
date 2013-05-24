@@ -1,5 +1,7 @@
 package tk3.labyrinth.umundo;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.umundo.core.Message;
@@ -25,7 +27,11 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	private Connection mainConnection;
 	private Connection gameConnection;
 	
-	
+	/**
+	 * map subID --> playerID
+	 */
+	private HashMap<String,String> players = new HashMap<String,String>();
+
 	public UmundoManager(GameManager gameManager) {
 		this.gameManager = gameManager;
 
@@ -54,7 +60,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	public Game getGame() {
 		return game;
 	}
-	
+
 	public Connection getMainConnection() {
 		return mainConnection;
 	}
@@ -63,6 +69,10 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		return gameConnection;
 	}
 
+	public HashMap<String, String> getSubIDToPlayerIDMap() {
+		return players;
+	}
+	
 	// 
 	public void movePlayer(String id, Position position) {
 		game.getPlayer(id).move(position);
@@ -82,7 +92,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	@Override
 	public void playerMoved(Player player, Position oldPosition) {
 		if(player == game.getOwnPlayer()) {
-			Message msg = MessageFactory.createPlayerPositionMessage(player.getId(), player.getPosition());
+			Message msg = MessageFactory.createPlayerPositionMessage(player.getId(), gameConnection.getSubscriberUUID(), player.getPosition());
 			gameConnection.send(msg);
 		}
 	}
@@ -118,7 +128,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		this.game = game;
 		game.addObserver(this);
 
-		if(gameConnection == null) {
+		if(gameConnection == null) { // TODO: brauchen wir das?
 			gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
 		}
 		
@@ -131,6 +141,11 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		gameConnection = null;
 		game.removeObserver(this);
 		this.game = null;
+		players.clear();
+		
+		gameManager.setGames(new HashSet<String>());
+		Message getGameInfoMsg = MessageFactory.createGetGameInfoMessage("X"); // TODO: senderId
+		mainConnection.send(getGameInfoMsg);
 	}
 
 	@Override

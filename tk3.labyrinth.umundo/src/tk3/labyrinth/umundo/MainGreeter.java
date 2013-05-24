@@ -27,7 +27,7 @@ public class MainGreeter extends Greeter {
 	
 	@Override
 	public void farewell(Publisher arg0, String nodeId, String subId) {
-		super.farewell(arg0, nodeId, subId);
+//		super.farewell(arg0, nodeId, subId);
 		
 		//TODO: hier noch was zu tun?
 	}
