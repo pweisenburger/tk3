@@ -392,7 +392,7 @@ public class MapGrammarParser extends Parser {
 			setState(70); name();
 			setState(72);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TYPE) | (1L << MAXIMUM) | (1L << FINISH))) != 0)) {
+			if (_la==TYPE || _la==MAXIMUM) {
 				{
 				setState(71); room_attr();
 				}
@@ -580,7 +580,6 @@ public class MapGrammarParser extends Parser {
 			setState(94);
 			switch (_input.LA(1)) {
 			case TYPE:
-			case FINISH:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(92); type();
@@ -633,24 +632,25 @@ public class MapGrammarParser extends Parser {
 		TypeContext _localctx = new TypeContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_type);
 		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(96); match(TYPE);
+			setState(97); match(7);
 			setState(100);
 			switch (_input.LA(1)) {
-			case TYPE:
-				enterOuterAlt(_localctx, 1);
+			case START:
 				{
-				setState(96); match(TYPE);
-				setState(97); match(7);
 				setState(98); start();
 				}
 				break;
 			case FINISH:
-				enterOuterAlt(_localctx, 2);
 				{
 				setState(99); finish();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -825,7 +825,7 @@ public class MapGrammarParser extends Parser {
 		"\20\3\20\3\21\3\21\3\21\3\21\3\21\2\22\2\4\6\b\n\f\16\20\22\24\26\30\32"+
 		"\34\36 \2\2l\2\"\3\2\2\2\4\65\3\2\2\2\69\3\2\2\2\b=\3\2\2\2\n@\3\2\2\2"+
 		"\fD\3\2\2\2\16G\3\2\2\2\20P\3\2\2\2\22S\3\2\2\2\24V\3\2\2\2\26`\3\2\2"+
-		"\2\30f\3\2\2\2\32h\3\2\2\2\34j\3\2\2\2\36l\3\2\2\2 p\3\2\2\2\"#\7\n\2"+
+		"\2\30b\3\2\2\2\32h\3\2\2\2\34j\3\2\2\2\36l\3\2\2\2 p\3\2\2\2\"#\7\n\2"+
 		"\2#\'\5\4\3\2$&\5\6\4\2%$\3\2\2\2&)\3\2\2\2\'%\3\2\2\2\'(\3\2\2\2(-\3"+
 		"\2\2\2)\'\3\2\2\2*,\5\n\6\2+*\3\2\2\2,/\3\2\2\2-+\3\2\2\2-.\3\2\2\2.\61"+
 		"\3\2\2\2/-\3\2\2\2\60\62\5\16\b\2\61\60\3\2\2\2\62\63\3\2\2\2\63\61\3"+
@@ -837,7 +837,7 @@ public class MapGrammarParser extends Parser {
 		"Q\7\6\2\2QR\5\24\13\2R\21\3\2\2\2ST\7\13\2\2TU\5\24\13\2U\23\3\2\2\2V"+
 		"[\7\23\2\2WX\7\7\2\2XZ\7\23\2\2YW\3\2\2\2Z]\3\2\2\2[Y\3\2\2\2[\\\3\2\2"+
 		"\2\\\25\3\2\2\2][\3\2\2\2^a\5\30\r\2_a\5\36\20\2`^\3\2\2\2`_\3\2\2\2a"+
-		"\27\3\2\2\2bc\7\r\2\2cd\7\t\2\2dg\5\32\16\2eg\5\34\17\2fb\3\2\2\2fe\3"+
+		"\27\3\2\2\2bc\7\r\2\2cf\7\t\2\2dg\5\32\16\2eg\5\34\17\2fd\3\2\2\2fe\3"+
 		"\2\2\2g\31\3\2\2\2hi\7\21\2\2i\33\3\2\2\2jk\7\22\2\2k\35\3\2\2\2lm\7\16"+
 		"\2\2mn\7\t\2\2no\7\24\2\2o\37\3\2\2\2pq\7\20\2\2qr\7\t\2\2rs\7\23\2\2"+
 		"s!\3\2\2\2\n\'-\63JN[`f";

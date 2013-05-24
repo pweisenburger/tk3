@@ -11,7 +11,7 @@ import tk3.labyrinth.map.grammar.MapGrammarParser;
 public class MapReader {
 
 	
-	public Field read(String pathToMapFile) throws IOException {
+	public Field readFile(String pathToMapFile) throws IOException, SyntaxException {
 		ANTLRInputStream input = new ANTLRFileStream(pathToMapFile);
 		MapGrammarLexer lexer = new MapGrammarLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -20,11 +20,9 @@ public class MapReader {
 		parser.addParseListener(listener);
 		parser.setBuildParseTree(true); 
 		parser.field();
+		if (parser.getNumberOfSyntaxErrors() != 0) {
+			throw new SyntaxException(pathToMapFile);
+		}
 		return listener.getResult();
 	}
-	
-	public static void main(String... args) throws IOException {
-		new MapReader().read("maps/test.map");
-	}
-
 }
