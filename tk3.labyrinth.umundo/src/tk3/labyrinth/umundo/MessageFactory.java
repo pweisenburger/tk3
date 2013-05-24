@@ -69,6 +69,16 @@ public class MessageFactory {
 		return msg;
 	}
 	
+	public static Message createPlayerPositionMessageToSubscriber(String subscriberSubID, String senderID, Position position) {
+		Message msg = Message.toSubscriber(subscriberSubID);
+		msg.putMeta(KEY_TYPE, MSG_PLAYER_POSITION);
+		msg.putMeta(KEY_SENDER_ID, senderID);
+		msg.putMeta(KEY_POS_ROOM, position.getRoom().getId());
+		msg.putMeta(KEY_POS_X, Integer.toString(position.getX()));
+		msg.putMeta(KEY_POS_Y, Integer.toString(position.getY()));
+		return msg;
+	}
+	
 	public static Message createGetGameInfoMessage(String senderID) {
 		Message msg = new Message();
 		msg.putMeta(KEY_TYPE, MSG_GET_GAME_INFO);
