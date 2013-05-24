@@ -39,7 +39,7 @@ import tk3.labyrinth.map.grammar.MapGrammarParser.StartContext;
 import tk3.labyrinth.map.grammar.MapGrammarParser.TypeContext;
 
 public class MapListener implements MapGrammarListener {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(MapListener.class);
 
 	private static final long seed = 1;
@@ -140,9 +140,8 @@ public class MapListener implements MapGrammarListener {
 		String id = ctx.id().STRING().getText();
 		String activateId = ctx.activate().STRING().getText();
 		idToButton.put(id, new Button());
-		if (idToButton.containsKey(activateId)) {
-			idToButton.get(id).initReferencedElement(idToDoor.get(activateId));
-		}
+		idToButton.get(id).initReferencedElement(idToDoor.get(activateId));
+		logger.debug("button {} activate door {}", id, activateId);
 	}
 
 	@Override
@@ -179,6 +178,7 @@ public class MapListener implements MapGrammarListener {
 		String id = ctx.id().STRING().getText();
 		String goalId = ctx.door_goal().STRING().getText();
 		idToDoor.put(id, new Door());
+		logger.debug("door {} is associated to door {}", id, goalId);
 		if (idToDoor.containsKey(goalId)) {
 			idToDoor.get(id).initDoor(idToDoor.get(goalId));
 			idToDoor.get(goalId).initDoor(idToDoor.get(id));
@@ -258,7 +258,7 @@ public class MapListener implements MapGrammarListener {
 			elementMatrix[i][0] = new Wall();
 			elementMatrix[i][y - 1] = new Wall();
 		}
-		for (int i = 1; i < y -1; i++) {
+		for (int i = 1; i < y - 1; i++) {
 			elementMatrix[0][i] = new Wall();
 			elementMatrix[x - 1][i] = new Wall();
 		}
@@ -279,7 +279,7 @@ public class MapListener implements MapGrammarListener {
 					y = random.nextBoolean() ? 0 : elementMatrix[0].length - 1;
 				}
 			} while (Door.class.isInstance(elementMatrix[x][y]));
-			logger.debug("place door on x={} and y={}", x,y);
+			logger.debug("place door on x={} and y={}", x, y);
 			elementMatrix[x][y] = door;
 		}
 	}
@@ -294,7 +294,7 @@ public class MapListener implements MapGrammarListener {
 				y = random.nextInt(elementMatrix[0].length - 1);
 			} while (x == 0 || y == 0 || elementMatrix[x][y] != null);
 			elementMatrix[x][y] = element;
-			logger.debug("place element on x={} and y={}", x,y);
+			logger.debug("place element on x={} and y={}", x, y);
 		}
 	}
 
@@ -315,9 +315,9 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void exitStart(StartContext ctx) {
-		this.start  = new Start();
+		this.start = new Start();
 		currentAddtional.add(start);
-		
+
 	}
 
 	@Override
