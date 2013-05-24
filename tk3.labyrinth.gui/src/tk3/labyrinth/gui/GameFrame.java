@@ -19,18 +19,24 @@ import javax.swing.Timer;
 import tk3.labyrinth.Game;
 import tk3.labyrinth.GameManager;
 import tk3.labyrinth.GameManagerObserver;
+import tk3.labyrinth.map.MapFacade;
 
 @SuppressWarnings("serial")
 public class GameFrame extends JFrame implements ActionListener, GameManagerObserver {
+	private MapFacade mapFacade;
 	private GameManager gameManager;
 	private SpringLayout layout;
 	private BlackPanel blackPanel;
 	private Timer animation;
 	private ListInputView gameList;
+	private ListInputView mapList;
 	private JComponent animationTarget;
+	private String playerName;
 	
 	public GameFrame(GameManager manager) {
+		mapFacade = new MapFacade();
 		gameManager = manager;
+		playerName = System.getProperty("user.name");
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(new Dimension(640, 480));
@@ -46,16 +52,36 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		gameList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				gameManager.joinGame(item);
+				gameManager.joinGame(item, playerName);
 			}
 			
 			protected void buttonClicked() {
-				gameManager.startNewGame(Main.testGame());
+				playerName = getInputText();
+				mapList.setInputText(playerName + "'s game");
+				animateTo(mapList);
 			}
 		};
 		gameList.setInputDesc("Player name: ");
-		gameList.setInputText(System.getProperty("user.name"));
+		gameList.setInputText(playerName);
 		gameList.setButtonText("New Game");
+		
+		mapList = new ListInputView() {
+			protected void listItemClicked(String item) {
+				gameManager.startNewGame(Main.testGame(getInputText(), playerName));
+			}
+			
+			protected void buttonClicked() {
+				animateTo(gameList);
+			}
+		};
+		mapList.setInputDesc("Game name: ");
+		mapList.setButtonText("Back");
+		
+		List<String> maps = mapFacade.getMapList();
+		if (maps.isEmpty())
+			mapList.setList(Collections.singletonList("(no maps)"), false);
+		else
+			mapList.setList(maps, true);
 		
 		layout.putConstraint(SpringLayout.HEIGHT, blackPanel, 0,
 				             SpringLayout.HEIGHT, getContentPane());
@@ -87,7 +113,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	}
 	
 	@Override
-	public void joinGame(String gameId) {
+	public void joinGame(String gameId, String playerId) {
 		//
 	}
 	

@@ -19,21 +19,20 @@ import tk3.labyrinth.umundo.UmundoManager;
 
 public class Main {
 	public static void main(String[] args) {
-		//TODO:setDefaultCloseOperation  just testing
 		final GameManager manager = new GameManager();
 		
-		final UmundoManager umundoManager = new UmundoManager(manager);
+//		final UmundoManager umundoManager = new UmundoManager(manager);
 		
 		final GameFrame frame = new GameFrame(manager);
 		frame.setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				umundoManager.close();
+//				umundoManager.close();
 			}
 		});
 	}
 	
-	public static Game testGame() {
+	public static Game testGame(String gameId, String playerId) {
 		Button button0;
 		Door door0, door1, door2, door3;
 		
@@ -82,9 +81,10 @@ public class Main {
 		room2.setId("Room 2");
 		
 		List<Room> rooms = Arrays.asList(room0, room1, room2);
-		Field field = new Field("",rooms);
-		List<Player> players = Arrays.asList(new Player("me", new Position(rooms.get(0), 1, 2)), new Player("other", new Position(rooms.get(0), 2, 3)));
-		Game game = new Game("Test Game", field, players);
+		
+		Field field = new Field("", rooms);
+		List<Player> players = Arrays.asList(new Player(playerId, new Position(rooms.get(0), 1, 2)), new Player("other", new Position(rooms.get(0), 2, 3)));
+		Game game = new Game(gameId, field, players);
 		game.setOwnPlayer(players.get(0));
 		
 		return game;
