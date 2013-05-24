@@ -72,15 +72,19 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		mapList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				try {
-					Field field = mapFacade.getMap(item);
-					Player player = new Player(playerName, field.getStart().getPosition());
-					Game game = new Game(getInputText(), field, Arrays.asList(player));
-					game.setOwnPlayer(player);
-					gameManager.startNewGame(game);
-				} catch (IOException | SyntaxException e) {
-					e.printStackTrace();
-				}
+				if (gameManager.getGames().contains(getInputText()))
+					animateTo(gameList);
+				else
+					try {
+	
+						Field field = mapFacade.getMap(item);
+						Player player = new Player(playerName, field.getStart().getPosition());
+						Game game = new Game(getInputText(), field, Arrays.asList(player));
+						game.setOwnPlayer(player);
+						gameManager.startNewGame(game);
+					} catch (IOException | SyntaxException e) {
+						e.printStackTrace();
+					}
 			}
 			
 			protected void buttonClicked() {
@@ -138,7 +142,6 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 			List<String> tempList = new ArrayList<String>(games);
 			gameList.setList(tempList, true);
 		}
-			
 	}
 	
 	public void animateTo(JComponent target) {
