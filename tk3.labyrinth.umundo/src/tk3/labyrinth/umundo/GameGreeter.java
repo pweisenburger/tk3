@@ -1,14 +1,19 @@
 package tk3.labyrinth.umundo;
 
+import java.io.IOException;
+
 import org.umundo.core.Greeter;
 import org.umundo.core.Message;
 import org.umundo.core.Publisher;
 
 import tk3.labyrinth.core.player.Player;
+import tk3.labyrinth.map.MapFacade;
 
 public class GameGreeter extends Greeter {
 	
 	private UmundoManager manager;
+	
+	private MapFacade mapFacade = new MapFacade();
 	
 	public GameGreeter(UmundoManager manager) {
 		this.manager = manager;
@@ -21,9 +26,16 @@ public class GameGreeter extends Greeter {
 			Player ownPlayer = manager.getGame().getOwnPlayer();
 			
 			if (manager.getGame() != null) {
-				msg = MessageFactory.createMapInfoMessageToSubscriber(subId, ownPlayer.getId(),
-						"XXX", manager.getGame().getField().toString());
-				//TODO mapId, mapDescription
+				String mapName = manager.getGame().getField().getName();
+				String mapDescription = null;
+				try {
+					mapDescription = mapFacade.getMapAsString(mapName);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					return;
+				}
+				msg = MessageFactory.createMapInfoMessageToSubscriber(subId, ownPlayer.getId(), mapName, mapDescription);
 				pub.send(msg);
 				
 				System.out.println("SENDE MAP_INFO");

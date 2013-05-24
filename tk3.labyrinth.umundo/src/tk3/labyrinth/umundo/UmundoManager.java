@@ -24,7 +24,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	private Node node;
 	private GameManager gameManager;
 	private Game game; //<-- brauchen wir das hier?
-	private String playerName = null;
+	private String playerId = null;
 	
 	private Connection mainConnection;
 	private Connection gameConnection;
@@ -73,6 +73,10 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 
 	public HashMap<String, String> getSubIDToPlayerIDMap() {
 		return players;
+	}
+	
+	public String getPlayerId() {
+		return playerId;
 	}
 	
 	// 
@@ -142,7 +146,7 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 		gameConnection.close();
 		gameConnection = null;
 		
-		playerName = null;
+		playerId = null;
 		
 		game.removeObserver(this);
 		this.game = null;
@@ -154,17 +158,13 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	}
 
 	@Override
-	public void joinGame(String gameId) {
+	public void joinGame(String gameId, String playerId) {
 		gameConnection = new Connection(node, PREFIX + gameId, new GameGreeter(this), new GameReceiver(this));
-		this.playerName = playerName;
+		this.playerId = playerId;
 	}
 
 	@Override
 	public void gameListChanged(Set<String> gameList) {
 		// TODO: hier wirklich nichts tun?		
 	}
-	
-	
-	
-
 }

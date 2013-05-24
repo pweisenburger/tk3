@@ -96,7 +96,7 @@ public class GameReceiver extends Receiver {
 			}
 			
 			Position position = field.getStart();
-			Player ownPlayer = new Player("xy", position); // TODO Namen herausfinden
+			Player ownPlayer = new Player(manager.getPlayerId(), position);
 			
 			Game joinedGame = new Game(gameId, field, new ArrayList<Player>(Arrays.asList(ownPlayer)));
 			joinedGame.setOwnPlayer(ownPlayer);
