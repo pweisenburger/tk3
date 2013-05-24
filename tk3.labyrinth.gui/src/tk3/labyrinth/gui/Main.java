@@ -63,7 +63,15 @@ public class Main {
 		door2.activate(null);
 		door3.activate(null);
 		
-		List<Room> rooms = Arrays.asList(new Room(elements0), new Room(elements1), new Room(elements2));
+		Room room0 = new Room(elements0);
+		Room room1 = new Room(elements1);
+		Room room2 = new Room(elements2);
+		
+		room0.setId("Room 0");
+		room1.setId("Room 1");
+		room2.setId("Room 2");
+		
+		List<Room> rooms = Arrays.asList(room0, room1, room2);
 		Field field = new Field(rooms);
 		List<Player> players = Arrays.asList(new Player("me", new Position(rooms.get(0), 1, 2)), new Player("other", new Position(rooms.get(0), 2, 3)));
 		Game game = new Game("Test Game", field, players);
