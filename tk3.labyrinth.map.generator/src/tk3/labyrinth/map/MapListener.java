@@ -58,6 +58,8 @@ public class MapListener implements MapGrammarListener {
 
 	private List<String> ids = new ArrayList<>();
 
+	private Start start = null;
+
 	public Field getResult() {
 		return field;
 	}
@@ -111,6 +113,7 @@ public class MapListener implements MapGrammarListener {
 	public void exitField(FieldContext ctx) {
 		String name = ctx.name().STRING().getText();
 		field = new Field(name, idToRoom.values());
+		field.setStart(start);
 	}
 
 	@Override
@@ -216,6 +219,7 @@ public class MapListener implements MapGrammarListener {
 	public void enterRoom(RoomContext ctx) {
 		currentAddtional.clear();
 		currentDoors.clear();
+		maxPlayer = -1;
 	}
 
 	@Override
@@ -229,7 +233,6 @@ public class MapListener implements MapGrammarListener {
 		room.setId(name);
 		room.setMaxPlayer(maxPlayer);
 		idToRoom.put(name, room);
-		maxPlayer = -1;
 	}
 
 	@Override
@@ -306,7 +309,9 @@ public class MapListener implements MapGrammarListener {
 
 	@Override
 	public void exitStart(StartContext ctx) {
-		currentAddtional.add(new Start());
+		this.start  = new Start();
+		currentAddtional.add(start);
+		
 	}
 
 	@Override
