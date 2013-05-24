@@ -27,10 +27,13 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	private BlackPanel blackPanel;
 	private Timer animation;
 	private ListInputView gameList;
+	private ListInputView mapList;
 	private JComponent animationTarget;
+	private String playerName;
 	
 	public GameFrame(GameManager manager) {
 		gameManager = manager;
+		playerName = System.getProperty("user.name");
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(new Dimension(640, 480));
@@ -50,12 +53,29 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 			}
 			
 			protected void buttonClicked() {
-				gameManager.startNewGame(Main.testGame());
+				playerName = getInputText();
+				mapList.setInputText(playerName + "'s game");
+				animateTo(mapList);
 			}
 		};
 		gameList.setInputDesc("Player name: ");
-		gameList.setInputText(System.getProperty("user.name"));
+		gameList.setInputText(playerName);
 		gameList.setButtonText("New Game");
+		
+		mapList = new ListInputView() {
+			protected void listItemClicked(String item) {
+				gameManager.startNewGame(Main.testGame(getInputText(), playerName));
+			}
+			
+			protected void buttonClicked() {
+				animateTo(gameList);
+			}
+		};
+		mapList.setInputDesc("Game name: ");
+		mapList.setButtonText("Back");
+		
+		//TODO: set map list
+		mapList.setList(java.util.Collections.singletonList("(test map)"), true);
 		
 		layout.putConstraint(SpringLayout.HEIGHT, blackPanel, 0,
 				             SpringLayout.HEIGHT, getContentPane());
