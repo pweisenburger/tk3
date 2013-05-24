@@ -5,7 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +21,11 @@ import javax.swing.Timer;
 import tk3.labyrinth.Game;
 import tk3.labyrinth.GameManager;
 import tk3.labyrinth.GameManagerObserver;
+import tk3.labyrinth.core.gamefield.Field;
+import tk3.labyrinth.core.player.Player;
+import tk3.labyrinth.core.shared.Position;
 import tk3.labyrinth.map.MapFacade;
+import tk3.labyrinth.map.SyntaxException;
 
 @SuppressWarnings("serial")
 public class GameFrame extends JFrame implements ActionListener, GameManagerObserver {
@@ -67,7 +73,17 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		mapList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				gameManager.startNewGame(Main.testGame(getInputText(), playerName));
+				try {
+					Field field = mapFacade.getMap(item);
+					List<Player> players = Arrays.asList(new Player(playerName, new Position(field.getRooms().iterator().next(), 1, 1))); 
+					Game game = new Game(getInputText(), field, players);
+					game.setOwnPlayer(players.get(0));
+					gameManager.startNewGame(game);
+				} catch (IOException | SyntaxException e) {
+					e.printStackTrace();
+				}
+				
+				// gameManager.startNewGame(Main.testGame(getInputText(), playerName));
 			}
 			
 			protected void buttonClicked() {
