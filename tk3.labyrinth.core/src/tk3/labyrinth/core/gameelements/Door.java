@@ -3,6 +3,7 @@ package tk3.labyrinth.core.gameelements;
 public class Door extends GameElement implements IActivatable {
 	private Door door;
 	private boolean active;
+	private boolean alwaysOpen = true;
 	
 	public void initDoor(Door door) {
 		if (this.door != null && this.door != door)
@@ -29,10 +30,17 @@ public class Door extends GameElement implements IActivatable {
 	
 	@Override
 	public boolean isActive() {
+		if (alwaysOpen) {
+			return true;
+		}
 		return active;
 	}
 	
 	public Door getDoor() {
 		return door;
+	}
+
+	public void setAlwaysOpen(boolean b) {
+		alwaysOpen  = b;
 	}
 }
