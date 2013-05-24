@@ -105,4 +105,13 @@ public class MessageFactory {
 		msg.putMeta(KEY_MAP_DESCRIPTION, mapDescription);
 		return msg;
 	}
+	
+	public static Message createMapInfoMessageToSubscriber(String SubscriberID, String senderID, String mapID, String mapDescription) {
+		Message msg = Message.toSubscriber(SubscriberID);
+		msg.putMeta(KEY_TYPE, MSG_MAP_INFO);
+		msg.putMeta(KEY_SENDER_ID, senderID);
+		msg.putMeta(KEY_MAP_ID, mapID);
+		msg.putMeta(KEY_MAP_DESCRIPTION, mapDescription);
+		return msg;
+	}
 }

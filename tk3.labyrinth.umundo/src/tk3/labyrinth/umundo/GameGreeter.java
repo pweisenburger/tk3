@@ -16,9 +16,16 @@ public class GameGreeter extends Greeter {
 	
 	@Override
 	public void welcome(Publisher pub, String nodeId, String subId) {
-		Player ownPlayer = manager.getGame().getOwnPlayer();
-		Message msg = MessageFactory.createPlayerPositionMessageToSubscriber(subId, ownPlayer.getId(), ownPlayer.getPosition());
-		pub.send(msg);
+		if(manager.getGame() != null) {
+			Message msg;
+			Player ownPlayer = manager.getGame().getOwnPlayer();
+			
+			//msg = MessageFactory.createMapInfoMessageToSubscriber(subId, ownPlayer.getId(), mapID, mapDescription); //TODO
+			//pub.send(msg);
+			
+			msg = MessageFactory.createPlayerPositionMessageToSubscriber(subId, ownPlayer.getId(), ownPlayer.getPosition());
+			pub.send(msg);
+		}		
 	}
 	
 	@Override

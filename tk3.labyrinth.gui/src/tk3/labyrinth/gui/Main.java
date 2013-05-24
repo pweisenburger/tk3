@@ -1,5 +1,7 @@
 package tk3.labyrinth.gui;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,9 +20,18 @@ import tk3.labyrinth.umundo.UmundoManager;
 public class Main {
 	public static void main(String[] args) {
 		//TODO:setDefaultCloseOperation  just testing
-		GameManager manager = new GameManager();
-		new UmundoManager(manager);
-		new GameFrame(manager).setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
+		final GameManager manager = new GameManager();
+		
+		final UmundoManager umundoManager = new UmundoManager(manager);
+		
+		final GameFrame frame = new GameFrame(manager);
+		frame.setDefaultCloseOperation(GameFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.out.println("ENDE");
+				umundoManager.close();
+			}
+		});
 	}
 	
 	public static Game testGame() {
