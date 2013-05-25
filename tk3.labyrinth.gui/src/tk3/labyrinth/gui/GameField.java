@@ -279,6 +279,9 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 				if (ownPlayer.move(newPos) == 2)
 					addMessage("Room " + newPos.getRoom().getId() + " is full");
 				
+				if (pos.getRoom() != ownPlayer.getPosition().getRoom())
+					addMessage("You entered room " + ownPlayer.getPosition().getRoom().getId());
+				
 				ge = getGameElement(ownPlayer.getPosition());
 				if (ge instanceof Finish) {
 					addMessage("You have finished the game");
