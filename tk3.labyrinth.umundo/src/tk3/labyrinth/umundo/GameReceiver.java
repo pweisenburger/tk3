@@ -86,7 +86,14 @@ public class GameReceiver extends Receiver {
 		} //ansonsten warten, bis die Map gekommen ist und das das Spiel angelegt wurde
 	}
 	
-	private void dispatchGameInfo(String SenderId, String mapId, String mapDescription) {
+	private void dispatchGameInfo(String senderId, String mapId, String mapDescription) {
+		//wenn ein anderer spieler denselben Namen wie ich hat, schmeisse mich raus
+		if(senderId.equals(manager.getPlayerId())) {
+			logger.warn("Doppelter Benutzername: {}", senderId);
+			//manager.getGameManager().userNameAlreadyUsed(); //TODO
+			return;
+		}
+		
 		if(manager.getGame() == null) { //andernfalls haben wir die Karte schon bekommen
 			String gameId = manager.getGameConnection().getId().substring(UmundoManager.PREFIX.length());
 			
