@@ -25,6 +25,12 @@ public class GameGreeter extends Greeter {
 	
 	@Override
 	public void welcome(Publisher pub, String nodeId, String subId) {
+		if (manager.getGame() == null) {
+			Message getMapMsg = MessageFactory.createGetMapInfoMessage(manager.getPlayerId(), manager.getGameConnection().getSubscriberUUID());
+			manager.getGameConnection().send(getMapMsg);
+		}
+		
+		/*
 		if(manager.getGame() != null) {
 			Message msg;
 			Player ownPlayer = manager.getGame().getOwnPlayer();
@@ -45,7 +51,8 @@ public class GameGreeter extends Greeter {
 				msg = MessageFactory.createPlayerPositionMessageToSubscriber(subId, ownPlayer.getId(), manager.getGameConnection().getSubscriberUUID(), ownPlayer.getPosition());
 				pub.send(msg);
 			}
-		}		
+		}
+		*/
 	}
 	
 	@Override

@@ -23,6 +23,8 @@ public class MessageFactory {
 	
 	public final static String MSG_MAP_INFO = "mapinfo";
 	
+	public final static String MSG_GET_MAP_INFO = "getmapinfo";
+	
 	public final static String MSG_ELEMENT_ACTIVATED = "elementactivated";
 	
 	
@@ -109,6 +111,14 @@ public class MessageFactory {
 		msg.putMeta(KEY_SENDER_ID, senderID);
 		msg.putMeta(KEY_MAP_ID, mapID);
 		msg.putMeta(KEY_MAP_DESCRIPTION, mapDescription);
+		return msg;
+	}
+	
+	public static Message createGetMapInfoMessage(String senderID, String senderSubId) {
+		Message msg = new Message();
+		msg.putMeta(KEY_TYPE, MSG_GET_MAP_INFO);
+		msg.putMeta(KEY_SENDER_SUBSCRIBER_ID, senderSubId);
+		msg.putMeta(KEY_SENDER_ID, senderID);
 		return msg;
 	}
 	
