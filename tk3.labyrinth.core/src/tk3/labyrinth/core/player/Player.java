@@ -61,9 +61,11 @@ public class Player {
 						break;
 					}
 				if (deactivate) {
+					boolean activated = button.getReferencedElement().isActive();
 					button.getReferencedElement().deactivate(button);
-					for (GameObserver o : game.getObservers())
-						o.elementActivated(button.getReferencedElement());
+					if (activated != button.getReferencedElement().isActive())
+						for (GameObserver o : game.getObservers())
+							o.elementActivated(button.getReferencedElement());
 				}
 			}
 		}
@@ -79,9 +81,11 @@ public class Player {
 						break;
 					}
 				if (activate) {
+					boolean activated = button.getReferencedElement().isActive();
 					button.getReferencedElement().activate(button);
-					for (GameObserver o : game.getObservers())
-						o.elementActivated(button.getReferencedElement());
+					if (activated != button.getReferencedElement().isActive())
+						for (GameObserver o : game.getObservers())
+							o.elementActivated(button.getReferencedElement());
 				}
 			}
 		}

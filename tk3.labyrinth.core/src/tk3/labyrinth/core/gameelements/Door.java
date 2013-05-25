@@ -1,9 +1,12 @@
 package tk3.labyrinth.core.gameelements;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Door extends GameElement implements IActivatable {
 	private Door door;
-	private boolean active;
 	private boolean alwaysOpen = true;
+	private Set<GameElement> active = new HashSet<>();
 	
 	public void initDoor(Door door) {
 		if (this.door != null && this.door != door)
@@ -18,22 +21,19 @@ public class Door extends GameElement implements IActivatable {
 	
 	@Override
 	public void activate(GameElement ge) {
-		active = true;
-		door.active = true;
+		active.add(ge);
+		door.active.add(ge);
 	}
 	
 	@Override
 	public void deactivate(GameElement ge) {
-		active = false;
-		door.active = false;
+		active.remove(ge);
+		door.active.remove(ge);
 	}
 	
 	@Override
 	public boolean isActive() {
-		if (alwaysOpen) {
-			return true;
-		}
-		return active;
+		return alwaysOpen || !active.isEmpty();
 	}
 	
 	public Door getDoor() {
