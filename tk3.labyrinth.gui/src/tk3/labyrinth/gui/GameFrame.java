@@ -76,13 +76,13 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 					animateTo(gameList);
 				else
 					try {
-	
 						Field field = mapFacade.getMap(item);
 						Player player = new Player(playerName, field.getStart().getPosition());
 						Game game = new Game(getInputText(), field, Arrays.asList(player));
 						game.setOwnPlayer(player);
 						gameManager.startNewGame(game);
-					} catch (IOException | SyntaxException e) {
+					}
+					catch (IOException | SyntaxException e) {
 						e.printStackTrace();
 					}
 			}

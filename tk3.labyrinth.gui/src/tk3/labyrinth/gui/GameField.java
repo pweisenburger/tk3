@@ -232,7 +232,9 @@ public class GameField extends JComponent implements GameObserver, ActionListene
 	@Override
 	public void elementActivated(IActivatable ge) {
 		if (ge instanceof GameElement)
-			addMessage(((GameElement) ge).getId() + " activated");
+			addMessage("Door in room " +
+					((GameElement) ge).getPosition().getRoom().getId() +
+					(ge.isActive() ? " opened" : " closed"));
 	}
 	
 	@Override
