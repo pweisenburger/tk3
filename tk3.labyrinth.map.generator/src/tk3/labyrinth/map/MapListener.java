@@ -199,6 +199,7 @@ public class MapListener implements MapGrammarListener {
 	public void exitDoors(DoorsContext ctx) {
 		for (String id : ids) {
 			if (idToDoor.get(id) != null) {
+				logger.debug("add door {} to doors of room", id);
 				currentDoors.add(idToDoor.get(id));
 			}
 		}
