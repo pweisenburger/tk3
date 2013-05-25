@@ -86,6 +86,6 @@ public class MapReaderTest {
 	@Test
 	public void validate() throws IOException, SyntaxException {
 	 reader.readMapFromFile("testdata" + File.separator
-				+ "snake.map");
+				+ "gaga.map");
 	}
 }

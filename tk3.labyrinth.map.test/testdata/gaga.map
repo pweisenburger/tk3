@@ -1,0 +1,17 @@
+field name=gaga
+door id=1 goal=2
+door id=2 goal=3
+door id=3 goal=4
+door id=4 goal=5
+door id=5 goal=6 
+door id=6 goal=7
+door id=7 goal=8
+door id=8 goal=9
+door id=9 goal=10
+door id=10 goal=11
+door id=11 goal=1
+room name=1 type=start doors=1,2
+room name=2 doors=3,4
+room name=3 doors=5,6
+room name=4 doors=7,8
+room name=5 doors=9,10
