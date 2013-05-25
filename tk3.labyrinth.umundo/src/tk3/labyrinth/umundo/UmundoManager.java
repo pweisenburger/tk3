@@ -137,14 +137,20 @@ public class UmundoManager implements GameObserver, GameManagerObserver {
 	@Override
 	public void gameJoined(Game game) {
 		this.game = game;
-		game.addObserver(this);
-
-		if(gameConnection == null) { // TODO: brauchen wir das?
-			gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
+		if (game != null) {
+			game.addObserver(this);
+	
+			if(gameConnection == null) { // TODO: brauchen wir das?
+				gameConnection = new Connection(node, PREFIX + game.getId(), new GameGreeter(this), new GameReceiver(this));
+			}
+			
+			Message posMsg = MessageFactory.createPlayerPositionMessage(playerId, gameConnection.getSubscriberUUID(), game.getOwnPlayer().getPosition());
+			gameConnection.send(posMsg);
 		}
-		
-		Message posMsg = MessageFactory.createPlayerPositionMessage(playerId, gameConnection.getSubscriberUUID(), game.getOwnPlayer().getPosition());
-		gameConnection.send(posMsg);
+		else if (gameConnection != null) {
+			gameConnection.close();
+			gameConnection = null;
+		}
 	}
 
 	@Override

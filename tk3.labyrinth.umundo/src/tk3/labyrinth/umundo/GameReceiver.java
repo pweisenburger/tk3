@@ -28,6 +28,7 @@ public class GameReceiver extends Receiver {
 	
 	public GameReceiver(UmundoManager manager) {
 		this.manager = manager;
+		this.mapFacade = new MapFacade();
 	}
 	
 	@Override
@@ -47,9 +48,40 @@ public class GameReceiver extends Receiver {
 		case MessageFactory.MSG_MAP_INFO:
 			dispatchGameInfo(msg.getMeta(MessageFactory.KEY_SENDER_ID), msg.getMeta(MessageFactory.KEY_MAP_ID),
 					msg.getMeta(MessageFactory.KEY_MAP_DESCRIPTION));
-			
+		case MessageFactory.MSG_GET_MAP_INFO:
+			dispatchGetGameInfo(msg.getMeta(MessageFactory.KEY_SENDER_ID),msg.getMeta(MessageFactory.KEY_SENDER_SUBSCRIBER_ID));
 		default:
 			//not interested
+		}
+	}
+
+	private void dispatchGetGameInfo(String senderId, String senderSubId) {
+		if(manager.getGame() != null) {
+			Message msg;
+			Player ownPlayer = manager.getGame().getOwnPlayer();
+				
+			if (manager.getGame().getPlayer(senderId) == null) {
+			
+			String mapName = manager.getGame().getField().getName();
+			String mapDescription = null;
+			try {
+				mapDescription = mapFacade.getMapAsString(mapName);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				return;
+			}
+			msg = MessageFactory.createMapInfoMessageToSubscriber(senderSubId, ownPlayer.getId(), mapName, mapDescription);
+			manager.getGameConnection().send(msg);
+		
+			msg = MessageFactory.createPlayerPositionMessageToSubscriber(senderSubId, ownPlayer.getId(), manager.getGameConnection().getSubscriberUUID(), ownPlayer.getPosition());
+			manager.getGameConnection().send(msg);
+			}
+			
+			else {
+				msg = MessageFactory.createMapInfoMessageToSubscriber(senderSubId, manager.getPlayerId(), "", "");
+				manager.getGameConnection().send(msg);
+			}
 		}
 	}
 
@@ -87,17 +119,21 @@ public class GameReceiver extends Receiver {
 	}
 	
 	private void dispatchGameInfo(String senderId, String mapId, String mapDescription) {
+		/*
 		//wenn ein anderer spieler denselben Namen wie ich hat, schmeisse mich raus
 		if(senderId.equals(manager.getPlayerId())) {
 			logger.warn("Doppelter Benutzername: {}", senderId);
 			//manager.getGameManager().userNameAlreadyUsed(); //TODO
 			return;
 		}
+		*/
+		if (mapId.isEmpty() && mapDescription.isEmpty()) {
+			manager.getGameManager().joinGame(null);
+		}
 		
-		if(manager.getGame() == null) { //andernfalls haben wir die Karte schon bekommen
+		else if(manager.getGame() == null) { //andernfalls haben wir die Karte schon bekommen
 			String gameId = manager.getGameConnection().getId().substring(UmundoManager.PREFIX.length());
 			
-			if (mapFacade == null) mapFacade = new MapFacade();
 			Field field = null;
 			try {
 				field = mapFacade.addMap(mapDescription);

@@ -88,8 +88,11 @@ public class GameManager {
 	}
 	
 	public void joinGame(Game game) {
+		leaveGame();
+		
 		this.game = game;
-		this.game.addObserver(gameObserver);
+		if (this.game != null)
+			this.game.addObserver(gameObserver);
 		for (GameManagerObserver o : observers)
 			o.gameJoined(game);
 	}

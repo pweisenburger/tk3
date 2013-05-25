@@ -121,7 +121,8 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	
 	@Override
 	public void gameJoined(Game game) {
-		animateTo(new GameField(game));
+		if (game != null)
+			animateTo(new GameField(game));
 	}
 	
 	@Override
