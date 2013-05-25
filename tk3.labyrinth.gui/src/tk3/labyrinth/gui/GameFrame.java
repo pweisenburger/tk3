@@ -35,6 +35,7 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	private Timer animation;
 	private ListInputView gameList;
 	private ListInputView mapList;
+	private Message message;
 	private JComponent animationTarget;
 	private String playerName;
 	
@@ -72,8 +73,10 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		
 		mapList = new ListInputView() {
 			protected void listItemClicked(String item) {
-				if (gameManager.getGames().contains(getInputText()))
-					animateTo(gameList);
+				if (gameManager.getGames().contains(getInputText())) {
+					message.setText("<html><p>The game " + getInputText() + " already exists</p></html>");
+					animateTo(message);
+				}
 				else
 					try {
 						Field field = mapFacade.getMap(item);
@@ -93,6 +96,12 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 		};
 		mapList.setInputDesc("Game name: ");
 		mapList.setButtonText("Back");
+		
+		message = new Message() {
+			protected void clicked() {
+				animateTo(gameList);
+			}
+		};
 		
 		List<String> maps = mapFacade.getMapList();
 		if (maps.isEmpty())
@@ -121,7 +130,12 @@ public class GameFrame extends JFrame implements ActionListener, GameManagerObse
 	
 	@Override
 	public void gameJoined(Game game) {
-		animateTo(new GameField(game));
+		if (game == null) {
+			message.setText("<html><p>User " + playerName + " is already in the game</p></html>");
+			animateTo(message);
+		}
+		else
+			animateTo(new GameField(game));
 	}
 	
 	@Override
